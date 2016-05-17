@@ -31,7 +31,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	func applicationWillTerminate(aNotification: NSNotification) {
-		// Insert code here to tear down your application
 		timer.invalidate()
 	}
 
@@ -65,7 +64,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		if let systemAttributes = try? NSFileManager.defaultManager().attributesOfFileSystemForPath(documentDirectoryPath.last!) {
 			if let freeSize = systemAttributes[NSFileSystemFreeSize] as? NSNumber {
 				let freeSizeInGB = Double(freeSize.longLongValue) / 1073741824.0
-				print("\(freeSizeInGB)")
+				//NSLog("\(freeSizeInGB)")
 				return freeSizeInGB
 			}
 		}
