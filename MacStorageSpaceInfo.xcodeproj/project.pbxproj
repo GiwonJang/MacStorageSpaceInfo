@@ -12,6 +12,7 @@
 		3C2A34C51CEACF8B0086A259 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C2A34C31CEACF8B0086A259 /* MainMenu.xib */; };
 		3C2A34D01CEACF8B0086A259 /* MacStorageSpaceInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A34CF1CEACF8B0086A259 /* MacStorageSpaceInfoTests.swift */; };
 		3C2A34DB1CEACF8B0086A259 /* MacStorageSpaceInfoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A34DA1CEACF8B0086A259 /* MacStorageSpaceInfoUITests.swift */; };
+		3CCF4CCF1CEAF2DC005C8E88 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 3CCF4CCE1CEAF2DC005C8E88 /* .gitignore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +44,7 @@
 		3C2A34D61CEACF8B0086A259 /* MacStorageSpaceInfoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacStorageSpaceInfoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C2A34DA1CEACF8B0086A259 /* MacStorageSpaceInfoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacStorageSpaceInfoUITests.swift; sourceTree = "<group>"; };
 		3C2A34DC1CEACF8B0086A259 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3CCF4CCE1CEAF2DC005C8E88 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +75,7 @@
 		3C2A34B31CEACF8B0086A259 = {
 			isa = PBXGroup;
 			children = (
+				3CCF4CCE1CEAF2DC005C8E88 /* .gitignore */,
 				3C2A34BE1CEACF8B0086A259 /* MacStorageSpaceInfo */,
 				3C2A34CE1CEACF8B0086A259 /* MacStorageSpaceInfoTests */,
 				3C2A34D91CEACF8B0086A259 /* MacStorageSpaceInfoUITests */,
@@ -224,6 +227,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C2A34C21CEACF8B0086A259 /* Assets.xcassets in Resources */,
+				3CCF4CCF1CEAF2DC005C8E88 /* .gitignore in Resources */,
 				3C2A34C51CEACF8B0086A259 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -471,6 +475,7 @@
 				3C2A34E11CEACF8B0086A259 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3C2A34E21CEACF8B0086A259 /* Build configuration list for PBXNativeTarget "MacStorageSpaceInfoTests" */ = {
 			isa = XCConfigurationList;
@@ -479,6 +484,7 @@
 				3C2A34E41CEACF8B0086A259 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3C2A34E51CEACF8B0086A259 /* Build configuration list for PBXNativeTarget "MacStorageSpaceInfoUITests" */ = {
 			isa = XCConfigurationList;
@@ -487,6 +493,7 @@
 				3C2A34E71CEACF8B0086A259 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
