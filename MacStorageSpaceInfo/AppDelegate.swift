@@ -17,7 +17,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	
 	let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(NSVariableStatusItemLength)
 	
-	var timer: NSTimer!
+	var refreshTimer: NSTimer!
 
 	func applicationDidFinishLaunching(aNotification: NSNotification) {
 		//let icon = NSImage(named: "statusIcon")
@@ -27,11 +27,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		statusItem.menu = statusMenu
 		//statusItem.title = "test"
 		
-		startTimer()
+		startRefreshTimer()
 	}
 
 	func applicationWillTerminate(aNotification: NSNotification) {
-		timer.invalidate()
+		refreshTimer.invalidate()
 	}
 
 	@IBAction func menuClicked(sender: NSMenuItem) {
@@ -72,8 +72,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		return nil
 	}
 
-	func startTimer() {
-		timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
+	func startRefreshTimer() {
+		refreshTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: #selector(AppDelegate.update), userInfo: nil, repeats: true)
+        NSRunLoop.mainRunLoop().addTimer(refreshTimer, forMode: NSRunLoopCommonModes)
 	}
 	
 	func update() {
