@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C152DE61D103FCF00A358B1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C152DE51D103FCF00A358B1 /* Cocoa.framework */; };
 		3C2A34C01CEACF8B0086A259 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A34BF1CEACF8B0086A259 /* AppDelegate.swift */; };
 		3C2A34C21CEACF8B0086A259 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C2A34C11CEACF8B0086A259 /* Assets.xcassets */; };
 		3C2A34C51CEACF8B0086A259 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C2A34C31CEACF8B0086A259 /* MainMenu.xib */; };
@@ -16,6 +17,11 @@
 		3C2C86301CF376F800A02F6C /* CleanroomASL.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3C2C862D1CF376F800A02F6C /* CleanroomASL.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3C2C86311CF376F800A02F6C /* CleanroomLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C2C862E1CF376F800A02F6C /* CleanroomLogger.framework */; };
 		3C2C86321CF376F800A02F6C /* CleanroomLogger.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3C2C862E1CF376F800A02F6C /* CleanroomLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3C5CBCD11D100C43005AA485 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5CBCD01D100C43005AA485 /* AppDelegate.swift */; };
+		3C5CBCD51D100C44005AA485 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C5CBCD41D100C44005AA485 /* Assets.xcassets */; };
+		3C5CBCD81D100C44005AA485 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C5CBCD61D100C44005AA485 /* Main.storyboard */; };
+		3C5CBCE01D100CDC005AA485 /* MacStorageSpaceInfoLauncher.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3C5CBCCE1D100C43005AA485 /* MacStorageSpaceInfoLauncher.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3C5CBCE21D100D05005AA485 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5CBCE11D100D05005AA485 /* ServiceManagement.framework */; };
 		3CCF4CCF1CEAF2DC005C8E88 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 3CCF4CCE1CEAF2DC005C8E88 /* .gitignore */; };
 /* End PBXBuildFile section */
 
@@ -49,9 +55,20 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3C5CBCDF1D100CC7005AA485 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LoginItems;
+			dstSubfolderSpec = 1;
+			files = (
+				3C5CBCE01D100CDC005AA485 /* MacStorageSpaceInfoLauncher.app in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3C152DE51D103FCF00A358B1 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		3C2A34BC1CEACF8B0086A259 /* MacStorageSpaceInfo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacStorageSpaceInfo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C2A34BF1CEACF8B0086A259 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3C2A34C11CEACF8B0086A259 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -65,6 +82,14 @@
 		3C2A34DC1CEACF8B0086A259 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C2C862D1CF376F800A02F6C /* CleanroomASL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CleanroomASL.framework; path = Carthage/Build/Mac/CleanroomASL.framework; sourceTree = "<group>"; };
 		3C2C862E1CF376F800A02F6C /* CleanroomLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CleanroomLogger.framework; path = Carthage/Build/Mac/CleanroomLogger.framework; sourceTree = "<group>"; };
+		3C5CBCCE1D100C43005AA485 /* MacStorageSpaceInfoLauncher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacStorageSpaceInfoLauncher.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C5CBCD01D100C43005AA485 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		3C5CBCD41D100C44005AA485 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3C5CBCD71D100C44005AA485 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3C5CBCD91D100C44005AA485 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3C5CBCDD1D100C73005AA485 /* MacStorageSpaceInfo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = MacStorageSpaceInfo.entitlements; sourceTree = "<group>"; };
+		3C5CBCDE1D100C79005AA485 /* MacStorageSpaceInfoLauncher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = MacStorageSpaceInfoLauncher.entitlements; sourceTree = "<group>"; };
+		3C5CBCE11D100D05005AA485 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		3CCF4CCE1CEAF2DC005C8E88 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -73,6 +98,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C152DE61D103FCF00A358B1 /* Cocoa.framework in Frameworks */,
+				3C5CBCE21D100D05005AA485 /* ServiceManagement.framework in Frameworks */,
 				3C2C862F1CF376F800A02F6C /* CleanroomASL.framework in Frameworks */,
 				3C2C86311CF376F800A02F6C /* CleanroomLogger.framework in Frameworks */,
 			);
@@ -92,18 +119,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3C5CBCCB1D100C43005AA485 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		3C2A34B31CEACF8B0086A259 = {
 			isa = PBXGroup;
 			children = (
+				3C152DE51D103FCF00A358B1 /* Cocoa.framework */,
+				3C5CBCE11D100D05005AA485 /* ServiceManagement.framework */,
 				3C2C862D1CF376F800A02F6C /* CleanroomASL.framework */,
 				3C2C862E1CF376F800A02F6C /* CleanroomLogger.framework */,
 				3CCF4CCE1CEAF2DC005C8E88 /* .gitignore */,
 				3C2A34BE1CEACF8B0086A259 /* MacStorageSpaceInfo */,
 				3C2A34CE1CEACF8B0086A259 /* MacStorageSpaceInfoTests */,
 				3C2A34D91CEACF8B0086A259 /* MacStorageSpaceInfoUITests */,
+				3C5CBCCF1D100C43005AA485 /* MacStorageSpaceInfoLauncher */,
 				3C2A34BD1CEACF8B0086A259 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -114,6 +151,7 @@
 				3C2A34BC1CEACF8B0086A259 /* MacStorageSpaceInfo.app */,
 				3C2A34CB1CEACF8B0086A259 /* MacStorageSpaceInfoTests.xctest */,
 				3C2A34D61CEACF8B0086A259 /* MacStorageSpaceInfoUITests.xctest */,
+				3C5CBCCE1D100C43005AA485 /* MacStorageSpaceInfoLauncher.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -121,6 +159,7 @@
 		3C2A34BE1CEACF8B0086A259 /* MacStorageSpaceInfo */ = {
 			isa = PBXGroup;
 			children = (
+				3C5CBCDD1D100C73005AA485 /* MacStorageSpaceInfo.entitlements */,
 				3C2A34BF1CEACF8B0086A259 /* AppDelegate.swift */,
 				3C2A34C11CEACF8B0086A259 /* Assets.xcassets */,
 				3C2A34C31CEACF8B0086A259 /* MainMenu.xib */,
@@ -147,6 +186,18 @@
 			path = MacStorageSpaceInfoUITests;
 			sourceTree = "<group>";
 		};
+		3C5CBCCF1D100C43005AA485 /* MacStorageSpaceInfoLauncher */ = {
+			isa = PBXGroup;
+			children = (
+				3C5CBCDE1D100C79005AA485 /* MacStorageSpaceInfoLauncher.entitlements */,
+				3C5CBCD01D100C43005AA485 /* AppDelegate.swift */,
+				3C5CBCD41D100C44005AA485 /* Assets.xcassets */,
+				3C5CBCD61D100C44005AA485 /* Main.storyboard */,
+				3C5CBCD91D100C44005AA485 /* Info.plist */,
+			);
+			path = MacStorageSpaceInfoLauncher;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -159,6 +210,7 @@
 				3C2A34BA1CEACF8B0086A259 /* Resources */,
 				3C2C86331CF376F800A02F6C /* Embed Frameworks */,
 				3C2C86341CF3773600A02F6C /* ShellScript */,
+				3C5CBCDF1D100CC7005AA485 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -205,6 +257,23 @@
 			productReference = 3C2A34D61CEACF8B0086A259 /* MacStorageSpaceInfoUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		3C5CBCCD1D100C43005AA485 /* MacStorageSpaceInfoLauncher */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C5CBCDC1D100C44005AA485 /* Build configuration list for PBXNativeTarget "MacStorageSpaceInfoLauncher" */;
+			buildPhases = (
+				3C5CBCCA1D100C43005AA485 /* Sources */,
+				3C5CBCCB1D100C43005AA485 /* Frameworks */,
+				3C5CBCCC1D100C43005AA485 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MacStorageSpaceInfoLauncher;
+			productName = MacStorageSpaceInfoLauncher;
+			productReference = 3C5CBCCE1D100C43005AA485 /* MacStorageSpaceInfoLauncher.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -217,6 +286,12 @@
 				TargetAttributes = {
 					3C2A34BB1CEACF8B0086A259 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 7TSDMTND8S;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
 					};
 					3C2A34CA1CEACF8B0086A259 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -225,6 +300,15 @@
 					3C2A34D51CEACF8B0086A259 = {
 						CreatedOnToolsVersion = 7.3.1;
 						TestTargetID = 3C2A34BB1CEACF8B0086A259;
+					};
+					3C5CBCCD1D100C43005AA485 = {
+						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 7TSDMTND8S;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -242,6 +326,7 @@
 			projectRoot = "";
 			targets = (
 				3C2A34BB1CEACF8B0086A259 /* MacStorageSpaceInfo */,
+				3C5CBCCD1D100C43005AA485 /* MacStorageSpaceInfoLauncher */,
 				3C2A34CA1CEACF8B0086A259 /* MacStorageSpaceInfoTests */,
 				3C2A34D51CEACF8B0086A259 /* MacStorageSpaceInfoUITests */,
 			);
@@ -270,6 +355,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C5CBCCC1D100C43005AA485 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C5CBCD51D100C44005AA485 /* Assets.xcassets in Resources */,
+				3C5CBCD81D100C44005AA485 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -316,6 +410,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3C5CBCCA1D100C43005AA485 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C5CBCD11D100C43005AA485 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -338,6 +440,14 @@
 				3C2A34C41CEACF8B0086A259 /* Base */,
 			);
 			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		3C5CBCD61D100C44005AA485 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3C5CBCD71D100C44005AA485 /* Base */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -429,6 +539,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MacStorageSpaceInfo/MacStorageSpaceInfo.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -445,6 +557,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MacStorageSpaceInfo/MacStorageSpaceInfo.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -507,6 +621,36 @@
 			};
 			name = Release;
 		};
+		3C5CBCDA1D100C44005AA485 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MacStorageSpaceInfoLauncher/MacStorageSpaceInfoLauncher.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MacStorageSpaceInfoLauncher/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = io.handicraft.MacStorageSpaceInfoLauncher;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		3C5CBCDB1D100C44005AA485 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MacStorageSpaceInfoLauncher/MacStorageSpaceInfoLauncher.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MacStorageSpaceInfoLauncher/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = io.handicraft.MacStorageSpaceInfoLauncher;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -542,6 +686,15 @@
 			buildConfigurations = (
 				3C2A34E61CEACF8B0086A259 /* Debug */,
 				3C2A34E71CEACF8B0086A259 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3C5CBCDC1D100C44005AA485 /* Build configuration list for PBXNativeTarget "MacStorageSpaceInfoLauncher" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C5CBCDA1D100C44005AA485 /* Debug */,
+				3C5CBCDB1D100C44005AA485 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

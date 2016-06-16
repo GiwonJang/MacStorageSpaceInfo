@@ -8,6 +8,7 @@
 
 import Cocoa
 import CleanroomLogger
+import ServiceManagement
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -21,17 +22,34 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	var refreshTimer: NSTimer!
 
 	func applicationDidFinishLaunching(aNotification: NSNotification) {
-        // Init CleanroomLogger
-        //Log.enable(configuration: XcodeLogConfiguration())
-        Log.enable(minimumSeverity: .Info,
-                   debugMode: true,
-                   verboseDebugMode: false,
-                   timestampStyle: .Default,
-                   severityStyle: .Xcode,
-                   showCallSite: true,
-                   showCallingThread: false,
-                   suppressColors: false,
-                   filters: [])
+		let launcherAppIdentifier = "io.handicraft.MacStorageSpaceInfo"
+
+		//you should move this next line to somewhere else this is for testing purposes only!!!
+		SMLoginItemSetEnabled(launcherAppIdentifier, true)
+
+		var startedAtLogin = false
+		for app in NSWorkspace.sharedWorkspace().runningApplications {
+			if app.bundleIdentifier == launcherAppIdentifier {
+				startedAtLogin = true
+			}
+		}
+
+		if startedAtLogin {
+			NSDistributedNotificationCenter.defaultCenter().postNotificationName("killme", object: NSBundle.mainBundle().bundleIdentifier)
+		}
+
+
+		// Init CleanroomLogger
+		//Log.enable(configuration: XcodeLogConfiguration())
+		Log.enable(minimumSeverity: .Info,
+		           debugMode: true,
+		           verboseDebugMode: false,
+		           timestampStyle: .Default,
+		           severityStyle: .Xcode,
+		           showCallSite: true,
+		           showCallingThread: false,
+		           suppressColors: false,
+		           filters: [])
 
 		//let icon = NSImage(named: "statusIcon")
 		//icon?.template = true
@@ -45,7 +63,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func applicationWillTerminate(aNotification: NSNotification) {
 		refreshTimer.invalidate()
-        Log.debug?.message("Refresh Timer Stopped.")
+		Log.debug?.message("Refresh Timer Stopped.")
 	}
 
 	@IBAction func menuClicked(sender: NSMenuItem) {
@@ -88,8 +106,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func startRefreshTimer() {
 		refreshTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: #selector(AppDelegate.update), userInfo: nil, repeats: true)
-        NSRunLoop.mainRunLoop().addTimer(refreshTimer, forMode: NSRunLoopCommonModes)
-        Log.debug?.message("Refresh Timer Started.")
+		NSRunLoop.mainRunLoop().addTimer(refreshTimer, forMode: NSRunLoopCommonModes)
+		Log.debug?.message("Refresh Timer Started.")
 	}
 
 	func update() {
@@ -103,8 +121,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	/*func measureTextLength(text: String) -> Int {
-		let myString: NSString = text as NSString
-		let size: CGSize = myString.sizeWithAttributes([NSFontAttributeName: NSFont.systemFontOfSize(14.0)])
-		return Int(size.width)
+	let myString: NSString = text as NSString
+	let size: CGSize = myString.sizeWithAttributes([NSFontAttributeName: NSFont.systemFontOfSize(14.0)])
+	return Int(size.width)
 	}*/
 }
