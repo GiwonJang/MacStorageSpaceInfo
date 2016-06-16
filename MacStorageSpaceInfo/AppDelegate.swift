@@ -22,7 +22,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	var refreshTimer: NSTimer!
 
 	func applicationDidFinishLaunching(aNotification: NSNotification) {
-		let launcherAppIdentifier = "io.handicraft.MacStorageSpaceInfo"
+		let launcherAppIdentifier = "io.handicraft.MacStorageSpaceInfoLauncher"
 
 		//you should move this next line to somewhere else this is for testing purposes only!!!
 		SMLoginItemSetEnabled(launcherAppIdentifier, true)

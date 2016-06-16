@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3C152DE61D103FCF00A358B1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C152DE51D103FCF00A358B1 /* Cocoa.framework */; };
 		3C2A34C01CEACF8B0086A259 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A34BF1CEACF8B0086A259 /* AppDelegate.swift */; };
 		3C2A34C21CEACF8B0086A259 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C2A34C11CEACF8B0086A259 /* Assets.xcassets */; };
 		3C2A34C51CEACF8B0086A259 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C2A34C31CEACF8B0086A259 /* MainMenu.xib */; };
@@ -21,8 +20,6 @@
 		3C5CBCD51D100C44005AA485 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C5CBCD41D100C44005AA485 /* Assets.xcassets */; };
 		3C5CBCD81D100C44005AA485 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C5CBCD61D100C44005AA485 /* Main.storyboard */; };
 		3C5CBCE01D100CDC005AA485 /* MacStorageSpaceInfoLauncher.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3C5CBCCE1D100C43005AA485 /* MacStorageSpaceInfoLauncher.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		3C5CBCE21D100D05005AA485 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5CBCE11D100D05005AA485 /* ServiceManagement.framework */; };
-		3CCF4CCF1CEAF2DC005C8E88 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 3CCF4CCE1CEAF2DC005C8E88 /* .gitignore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,8 +95,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C152DE61D103FCF00A358B1 /* Cocoa.framework in Frameworks */,
-				3C5CBCE21D100D05005AA485 /* ServiceManagement.framework in Frameworks */,
 				3C2C862F1CF376F800A02F6C /* CleanroomASL.framework in Frameworks */,
 				3C2C86311CF376F800A02F6C /* CleanroomLogger.framework in Frameworks */,
 			);
@@ -339,7 +334,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C2A34C21CEACF8B0086A259 /* Assets.xcassets in Resources */,
-				3CCF4CCF1CEAF2DC005C8E88 /* .gitignore in Resources */,
 				3C2A34C51CEACF8B0086A259 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
