@@ -16,42 +16,42 @@ public enum TimestampStyle
 {
     /** Specifies a timestamp style that uses the date format string
      "yyyy-MM-dd HH:mm:ss.SSS zzz". */
-    case Default
+    case `default`
 
     /** Specifies a UNIX timestamp indicating the number of seconds elapsed
     since January 1, 1970. */
-    case UNIX
+    case unix
 
     /** Specifies a custom date format. */
-    case Custom(String)
+    case custom(String)
 }
 
 extension TimestampStyle
 {
-    private var dateFormat: String? {
+    fileprivate var dateFormat: String? {
         switch self {
-        case .Default:          return "yyyy-MM-dd HH:mm:ss.SSS zzz"
-        case .UNIX:             return nil
-        case .Custom(let fmt):  return fmt
+        case .default:          return "yyyy-MM-dd HH:mm:ss.SSS xxx"
+        case .unix:             return nil
+        case .custom(let fmt):  return fmt
         }
     }
 
-    private var formatter: NSDateFormatter? {
+    fileprivate var formatter: DateFormatter? {
         guard let format = dateFormat else {
             return nil
         }
 
-        let formatter = NSDateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = format
         return formatter
     }
 
-    private func stringFromDate(date: NSDate, usingFormatter formatter: NSDateFormatter?)
+    fileprivate func string(from date: Date, using formatter: DateFormatter?)
         -> String
     {
         switch self {
-        case .UNIX:     return "\(date.timeIntervalSince1970)"
-        default:        return formatter!.stringFromDate(date)
+        case .unix:     return String(describing: date.timeIntervalSince1970)
+        default:        return formatter!.string(from: date)
         }
     }
 }
@@ -69,16 +69,16 @@ public struct TimestampLogFormatter: LogFormatter
      its output. */
     public let style: TimestampStyle
 
-    private let formatter: NSDateFormatter?
+    private let formatter: DateFormatter?
 
     /**
      Initializes a new `TimestampLogFormatter` that will use the specified
      `TimestampStyle`.
 
      - parameter style: A `TimestampStyle` value that will govern the output
-     of the `formatLogEntry()` function.
+     of the `format(_:)` function.
      */
-    public init(style: TimestampStyle = .Default)
+    public init(style: TimestampStyle = .default)
     {
         self.style = style
         self.formatter = style.formatter
@@ -92,9 +92,9 @@ public struct TimestampLogFormatter: LogFormatter
 
      - returns: The formatted result; never `nil`.
      */
-    public func formatLogEntry(entry: LogEntry)
+    public func format(_ entry: LogEntry)
         -> String?
     {
-        return style.stringFromDate(entry.timestamp, usingFormatter: formatter)
+        return style.string(from: entry.timestamp, using: formatter)
     }
 }

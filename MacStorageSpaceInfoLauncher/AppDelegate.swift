@@ -11,11 +11,9 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-
-
-	func applicationDidFinishLaunching(aNotification: NSNotification) {
+	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		let mainAppIdentifier = "io.handicraft.MacStorageSpaceInfo"
-		let running           = NSWorkspace.sharedWorkspace().runningApplications
+		let running           = NSWorkspace.shared.runningApplications
 		var alreadyRunning    = false
 
 		for app in running {
@@ -26,9 +24,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 
 		if !alreadyRunning {
-			NSDistributedNotificationCenter.defaultCenter().addObserver(self, selector: "terminate", name: "killme", object: mainAppIdentifier)
+            DistributedNotificationCenter.default.addObserver(self, selector: #selector(Process.terminate), name: NSNotification.Name("killme"), object: mainAppIdentifier)
 
-			let path = NSBundle.mainBundle().bundlePath as NSString
+			let path = Bundle.main.bundlePath as NSString
 			var components = path.pathComponents
 			components.removeLast()
 			components.removeLast()
@@ -36,16 +34,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			components.append("MacOS")
 			components.append("MacStorageSpaceInfo") //main app name
 
-			let newPath = NSString.pathWithComponents(components)
+			let newPath = NSString.path(withComponents: components)
 
-			NSWorkspace.sharedWorkspace().launchApplication(newPath)
+			NSWorkspace.shared.launchApplication(newPath)
 		} else {
 			self.terminate()
 		}
 
 	}
 
-	func applicationWillTerminate(aNotification: NSNotification) {
+	func applicationWillTerminate(_ aNotification: Notification) {
 		// Insert code here to tear down your application
 	}
 

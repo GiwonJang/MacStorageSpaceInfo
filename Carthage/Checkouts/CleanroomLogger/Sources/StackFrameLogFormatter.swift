@@ -14,7 +14,7 @@
  */
 public struct StackFrameLogFormatter: LogFormatter
 {
-    /** Class initializer. */
+    /** The initializer. */
     public init() {}
 
     /**
@@ -25,7 +25,7 @@ public struct StackFrameLogFormatter: LogFormatter
 
      - returns: The formatted result; never `nil`.
      */
-    public func formatLogEntry(entry: LogEntry)
+    public func format(_ entry: LogEntry)
         -> String?
     {
         return entry.callingStackFrame

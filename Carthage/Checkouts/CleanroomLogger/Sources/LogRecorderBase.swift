@@ -11,15 +11,15 @@ import Dispatch
 /**
  A partial implementation of the `LogRecorder` protocol.
  */
-public class LogRecorderBase: LogRecorder
+open class LogRecorderBase: LogRecorder
 {
     /** The `LogFormatter`s that will be used to format messages for the
      `LogEntry`s to be logged. */
-    public let formatters: [LogFormatter]
+    open let formatters: [LogFormatter]
 
     /** The GCD queue that should be used for logging actions related to the
      receiver. */
-    public let queue: dispatch_queue_t
+    open let queue: DispatchQueue
 
     /**
      Initialize a new `LogRecorderBase` instance.
@@ -29,11 +29,14 @@ public class LogRecorderBase: LogRecorder
      sequence, and the formatted string returned by the first formatter to
      yield a non-`nil` value will be recorded. If every formatter returns `nil`,
      the log entry is silently ignored and not recorded.
+     
+     - parameter queue: The `DispatchQueue` to use for the recorder. If `nil`,
+     a new queue will be created.
      */
-    public init(formatters: [LogFormatter])
+    public init(formatters: [LogFormatter], queue: DispatchQueue? = nil)
     {
         self.formatters = formatters
-        self.queue = dispatch_queue_create("\(self.dynamicType)", DISPATCH_QUEUE_SERIAL)
+        self.queue = queue != nil ? queue! : DispatchQueue(label: String(describing: type(of: self)), attributes: [])
     }
 
     /**
@@ -51,11 +54,10 @@ public class LogRecorderBase: LogRecorder
      - parameter currentQueue: The GCD queue on which the function is being
      executed.
 
-     - parameter synchronousMode: If `true`, the receiver should record the log
-     entry synchronously and flush any buffers before returning.
+     - parameter synchronousMode: If `true`, the recording is being done in
+     synchronous mode, and the recorder should act accordingly.
     */
-    public func recordFormattedMessage(message: String, forLogEntry entry: LogEntry, currentQueue: dispatch_queue_t, synchronousMode: Bool)
+    open func record(message: String, for entry: LogEntry, currentQueue: DispatchQueue, synchronousMode: Bool)
     {
     }
 }
-

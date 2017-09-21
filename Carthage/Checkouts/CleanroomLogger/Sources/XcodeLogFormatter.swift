@@ -7,49 +7,47 @@
 //
 
 /**
- A `LogFormatter` ideal for use within Xcode.
-
- By default, this formatter:
-
- - Uses `.Default` as the default `TimestampStyle`
- - Uses `.Xcode` as the default `SeverityStyle`
- - Uses default field separator delimiters
- - Outputs the call site 
- - Does not output the calling thread
- - Performs text colorization if XcodeColors is installed and enabled
-
- These defaults can be overridden during instantiation.
+ A `LogFormatter` ideal for use within Xcode. This format is not well-suited
+ for parsing.
  */
-public class XcodeLogFormatter: StandardLogFormatter
+public final class XcodeLogFormatter: LogFormatter
 {
+    private let traceFormatter: XcodeTraceLogFormatter
+    private let defaultFormatter: FieldBasedLogFormatter
+    
     /**
      Initializes a new `XcodeLogFormatter` instance.
 
-     - parameter timestampStyle: Governs the formatting of the timestamp in the
-     log output. Pass `nil` to suppress output of the timestamp.
-
-     - parameter severityStyle: Governs the formatting of the `LogSeverity` in
-     the log output. Pass `nil` to suppress output of the severity.
-
-     - parameter delimiterStyle: If provided, overrides the default field
-     separator delimiters. Pass `nil` to use the default delimiters.
-
      - parameter showCallSite: If `true`, the source file and line indicating
      the call site of the log request will be added to formatted log messages.
-
-     - parameter showCallingThread: If `true`, a hexadecimal string containing
-     an opaque identifier for the calling thread will be added to formatted log
-     messages.
-
-     - parameter colorizer: The `TextColorizer` that will be used to colorize
-     the output of the receiver. If `nil`, no colorization will occur.
-
-     - parameter colorTable: If a `colorizer` is provided, an optional
-     `ColorTable` may also be provided to supply color information. If `nil`,
-     `DefaultColorTable` will be used for colorization.
      */
-    public override init(timestampStyle: TimestampStyle? = .Default, severityStyle: SeverityStyle? = .Xcode, delimiterStyle: DelimiterStyle? = nil, showCallSite: Bool = true, showCallingThread: Bool = false, colorizer: TextColorizer? = XcodeColorsTextColorizer(), colorTable: ColorTable? = nil)
+    public init(showCallSite: Bool = true)
     {
-        super.init(timestampStyle: timestampStyle, severityStyle: severityStyle, delimiterStyle: delimiterStyle, showCallSite: showCallSite, showCallingThread: showCallingThread, colorizer: colorizer, colorTable: colorTable)
+        traceFormatter = XcodeTraceLogFormatter()
+        
+        var fields: [FieldBasedLogFormatter.Field] = []
+        fields.append(.severity(.xcode))
+        fields.append(.delimiter(.space))
+        fields.append(.payload)
+        if showCallSite {
+            fields.append(.literal(" ("))
+            fields.append(.callSite)
+            fields.append(.literal(")"))
+        }
+
+        defaultFormatter = FieldBasedLogFormatter(fields: fields)
+    }
+    
+    /**
+     Called to create a string representation of the passed-in `LogEntry`.
+     
+     - parameter entry: The `LogEntry` to attempt to convert into a string.
+     
+     - returns:  A `String` representation of `entry`, or `nil` if the
+     receiver could not format the `LogEntry`.
+     */
+    open func format(_ entry: LogEntry) -> String?
+    {
+        return traceFormatter.format(entry) ?? defaultFormatter.format(entry)
     }
 }

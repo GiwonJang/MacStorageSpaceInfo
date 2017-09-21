@@ -36,7 +36,7 @@ public protocol LogRecorder
      used, and might be appropriate when logging to databases or network
      endpoints.
      */
-    var queue: dispatch_queue_t { get }
+    var queue: DispatchQueue { get }
 
     /**
      Called by the `LogReceptacle` to record the formatted log message.
@@ -51,8 +51,8 @@ public protocol LogRecorder
      - parameter currentQueue: The GCD queue on which the function is being
      executed.
 
-     - parameter synchronousMode: If `true`, the receiver should record the log
-     entry synchronously and flush any buffers before returning.
+     - parameter synchronousMode: If `true`, the recording is being done in
+     synchronous mode, and the recorder should act accordingly.
     */
-    func recordFormattedMessage(message: String, forLogEntry entry: LogEntry, currentQueue: dispatch_queue_t, synchronousMode: Bool)
+    func record(message: String, for entry: LogEntry, currentQueue: DispatchQueue, synchronousMode: Bool)
 }

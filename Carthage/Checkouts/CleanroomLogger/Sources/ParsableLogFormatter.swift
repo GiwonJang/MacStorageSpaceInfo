@@ -11,15 +11,15 @@
  
  By default, this formatter:
  
- - Uses `.UNIX` as the default `TimestampStyle`
- - Uses `.Numeric` as the default `SeverityStyle`
- - Uses `.Tab` as the default `DelimiterStyle`
- - Outputs the call site and calling thread
- - Does not perform text colorization
+ - Uses `.unix` as the `TimestampStyle`
+ - Uses `.numeric` as the `SeverityStyle`
+ - Uses `.hex` as the `CallingThreadStyle`
+ - Uses `.tab` as the `DelimiterStyle`
+ - Outputs the source code filename and line number of the call site
  
- These defaults can be overridden during instantiation.
+ Each of these settings can be overridden during instantiation.
  */
-public class ParsableLogFormatter: StandardLogFormatter
+open class ParsableLogFormatter: StandardLogFormatter
 {
     /**
      Initializes a new `ParsableLogFormatter` instance.
@@ -30,25 +30,18 @@ public class ParsableLogFormatter: StandardLogFormatter
      - parameter severityStyle: Governs the formatting of the `LogSeverity` in
      the log output. Pass `nil` to suppress output of the severity.
 
+     - parameter callingThreadStyle: If provided, specifies a
+     `CallingThreadStyle` to use for representing the calling thread. If `nil`,
+     the calling thread is not shown.
+
      - parameter delimiterStyle: If provided, overrides the default field
      separator delimiters. Pass `nil` to use the default delimiters.
 
      - parameter showCallSite: If `true`, the source file and line indicating
      the call site of the log request will be added to formatted log messages.
-
-     - parameter showCallingThread: If `true`, a hexadecimal string containing
-     an opaque identifier for the calling thread will be added to formatted log
-     messages.
-
-     - parameter colorizer: The `TextColorizer` that will be used to colorize
-     the output of the receiver. If `nil`, no colorization will occur.
-
-     - parameter colorTable: If a `colorizer` is provided, an optional
-     `ColorTable` may also be provided to supply color information. If `nil`,
-     `DefaultColorTable` will be used for colorization.
      */
-    public override init(timestampStyle: TimestampStyle? = .UNIX, severityStyle: SeverityStyle? = .Numeric, delimiterStyle: DelimiterStyle? = .Tab, showCallSite: Bool = true, showCallingThread: Bool = true, colorizer: TextColorizer? = nil, colorTable: ColorTable? = nil)
+    public override init(timestampStyle: TimestampStyle? = .unix, severityStyle: SeverityStyle? = .numeric, delimiterStyle: DelimiterStyle? = .tab, callingThreadStyle: CallingThreadStyle? = .hex, showCallSite: Bool = true)
     {
-        super.init(timestampStyle: timestampStyle, severityStyle: severityStyle, delimiterStyle: delimiterStyle, showCallSite: showCallSite, showCallingThread: showCallingThread, colorizer: colorizer, colorTable: colorTable)
+        super.init(timestampStyle: timestampStyle, severityStyle: severityStyle, delimiterStyle: delimiterStyle, callingThreadStyle: callingThreadStyle, showCallSite: showCallSite)
     }
 }

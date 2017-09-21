@@ -7,36 +7,36 @@
 //
 
 /**
-Used to indicate the *severity*, or importance, of a log message.
-
-Severity is a continuum, from `.Verbose` being least severe to `.Error` being
-most severe.
-
-The logging system may be configured so that messages lower than a given
-severity are ignored.
+ Used to indicate the *severity*, or importance, of a log message.
+ 
+ Severity is a continuum, from `.verbose` being least severe to `.error` being
+ most severe.
+ 
+ The logging system may be configured so that messages lower than a given
+ severity are ignored.
 */
 public enum LogSeverity: Int
 {
     /** The lowest severity, used for detailed or frequently occurring
-    debugging and diagnostic information. Not intended for use in production
-    code. */
-    case Verbose    = 1
-
+     debugging and diagnostic information. Not intended for use in production
+     code. */
+    case verbose    = 1
+    
     /** Used for debugging and diagnostic information. Not intended for use
-    in production code. */
-    case Debug      = 2
-
+     in production code. */
+    case debug      = 2
+    
     /** Used to indicate something of interest that is not problematic. */
-    case Info       = 3
-
+    case info       = 3
+    
     /** Used to indicate that something appears amiss and potentially
-    problematic. The situation bears looking into before a larger problem
-    arises. */
-    case Warning    = 4
-
+     problematic. The situation bears looking into before a larger problem
+     arises. */
+    case warning    = 4
+    
     /** The highest severity, used to indicate that something has gone wrong;
-    a fatal error may be imminent. */
-    case Error      = 5
+     a fatal error may be imminent. */
+    case error      = 5
 }
 
 extension LogSeverity: CustomStringConvertible
@@ -44,11 +44,11 @@ extension LogSeverity: CustomStringConvertible
     /** Returns a human-readable textual representation of the receiver. */
     public var description: String {
         switch self {
-        case Verbose:   return "Verbose"
-        case Debug:     return "Debug"
-        case Info:      return "Info"
-        case Warning:   return "Warning"
-        case Error:     return "Error"
+        case .verbose:   return "Verbose"
+        case .debug:     return "Debug"
+        case .info:      return "Info"
+        case .warning:   return "Warning"
+        case .error:     return "Error"
         }
     }
 }

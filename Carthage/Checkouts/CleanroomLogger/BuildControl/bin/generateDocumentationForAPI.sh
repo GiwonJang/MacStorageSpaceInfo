@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 
-if [[ "$DEVELOPER_DIR" == "/Applications/Xcode-beta.app/Contents/Developer" ]]; then
-	export DEVELOPER_DIR="/Applications/Xcode.app/Contents/Developer"
-fi
+while [[ $1 ]]; do
+	case $1 in
+	--quiet|-q)
+		QUIET=1
+		;;
+	esac
+	shift
+done		
 
 JAZZY_EXECUTABLE=`which jazzy`
 if [[ $? != 0 ]]; then
@@ -24,14 +29,25 @@ if [[ "$COPYRIGHT_YEAR" != "$CURRENT_YEAR" ]]; then
 	COPYRIGHT_YEAR="${COPYRIGHT_YEAR}-${CURRENT_YEAR}"
 fi
 
-"$JAZZY_EXECUTABLE" -o Documentation/API \
-	-m "$MODULE_NAME" \
-	--swift-version 2.2 \
-	--readme Sources/README.md \
-	--github_url "$PUBLIC_GITHUB_URL" \
-	--author "Evan Maloney, Gilt Groupe" \
-	--author_url "$AUTHOR_GITHUB_URL" \
-	--copyright "© $COPYRIGHT_YEAR [Gilt Groupe](http://tech.gilt.com/)"
+rm -rf Documentation/API	# clear out any old docs; they may have remnant files
+	
+if [[ $QUIET ]]; then
+	"$JAZZY_EXECUTABLE" -o Documentation/API \
+		--module "$MODULE_NAME" \
+		--readme Sources/README.md \
+		--github_url "$PUBLIC_GITHUB_URL" \
+		--author "Evan Maloney, Gilt Groupe" \
+		--author_url "$AUTHOR_GITHUB_URL" \
+		--copyright "© $COPYRIGHT_YEAR [Gilt Groupe](http://tech.gilt.com/)" 2&> /dev/null
+else
+	"$JAZZY_EXECUTABLE" -o Documentation/API \
+		--module "$MODULE_NAME" \
+		--readme Sources/README.md \
+		--github_url "$PUBLIC_GITHUB_URL" \
+		--author "Evan Maloney, Gilt Groupe" \
+		--author_url "$AUTHOR_GITHUB_URL" \
+		--copyright "© $COPYRIGHT_YEAR [Gilt Groupe](http://tech.gilt.com/)"
+fi
 
 JAZZY_EXIT_CODE=$?
 if [[ $JAZZY_EXIT_CODE != 0 ]]; then

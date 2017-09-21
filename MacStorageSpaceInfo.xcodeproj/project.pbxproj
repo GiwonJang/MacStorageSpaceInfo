@@ -7,15 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C1C0C611F73A2E900E23107 /* CleanroomLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C1C0C601F73A2E900E23107 /* CleanroomLogger.framework */; };
+		3C1C0C621F73A2E900E23107 /* CleanroomLogger.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3C1C0C601F73A2E900E23107 /* CleanroomLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3C2A34C01CEACF8B0086A259 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A34BF1CEACF8B0086A259 /* AppDelegate.swift */; };
 		3C2A34C21CEACF8B0086A259 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C2A34C11CEACF8B0086A259 /* Assets.xcassets */; };
 		3C2A34C51CEACF8B0086A259 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C2A34C31CEACF8B0086A259 /* MainMenu.xib */; };
 		3C2A34D01CEACF8B0086A259 /* MacStorageSpaceInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A34CF1CEACF8B0086A259 /* MacStorageSpaceInfoTests.swift */; };
 		3C2A34DB1CEACF8B0086A259 /* MacStorageSpaceInfoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A34DA1CEACF8B0086A259 /* MacStorageSpaceInfoUITests.swift */; };
-		3C2C862F1CF376F800A02F6C /* CleanroomASL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C2C862D1CF376F800A02F6C /* CleanroomASL.framework */; };
-		3C2C86301CF376F800A02F6C /* CleanroomASL.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3C2C862D1CF376F800A02F6C /* CleanroomASL.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3C2C86311CF376F800A02F6C /* CleanroomLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C2C862E1CF376F800A02F6C /* CleanroomLogger.framework */; };
-		3C2C86321CF376F800A02F6C /* CleanroomLogger.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3C2C862E1CF376F800A02F6C /* CleanroomLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3C5CBCD11D100C43005AA485 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5CBCD01D100C43005AA485 /* AppDelegate.swift */; };
 		3C5CBCD51D100C44005AA485 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C5CBCD41D100C44005AA485 /* Assets.xcassets */; };
 		3C5CBCD81D100C44005AA485 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C5CBCD61D100C44005AA485 /* Main.storyboard */; };
@@ -40,14 +38,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		3C2C86331CF376F800A02F6C /* Embed Frameworks */ = {
+		3C1C0C631F73A2E900E23107 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3C2C86301CF376F800A02F6C /* CleanroomASL.framework in Embed Frameworks */,
-				3C2C86321CF376F800A02F6C /* CleanroomLogger.framework in Embed Frameworks */,
+				3C1C0C621F73A2E900E23107 /* CleanroomLogger.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -66,6 +63,9 @@
 
 /* Begin PBXFileReference section */
 		3C152DE51D103FCF00A358B1 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		3C1C0C581F739F1D00E23107 /* CleanroomLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CleanroomLogger.framework; path = Carthage/Build/Mac/CleanroomLogger.framework; sourceTree = "<group>"; };
+		3C1C0C5C1F73A1C700E23107 /* CleanroomLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CleanroomLogger.framework; path = Carthage/Build/Mac/CleanroomLogger.framework; sourceTree = "<group>"; };
+		3C1C0C601F73A2E900E23107 /* CleanroomLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CleanroomLogger.framework; path = Carthage/Build/Mac/CleanroomLogger.framework; sourceTree = "<group>"; };
 		3C2A34BC1CEACF8B0086A259 /* MacStorageSpaceInfo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacStorageSpaceInfo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C2A34BF1CEACF8B0086A259 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3C2A34C11CEACF8B0086A259 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -77,7 +77,6 @@
 		3C2A34D61CEACF8B0086A259 /* MacStorageSpaceInfoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacStorageSpaceInfoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C2A34DA1CEACF8B0086A259 /* MacStorageSpaceInfoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacStorageSpaceInfoUITests.swift; sourceTree = "<group>"; };
 		3C2A34DC1CEACF8B0086A259 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3C2C862D1CF376F800A02F6C /* CleanroomASL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CleanroomASL.framework; path = Carthage/Build/Mac/CleanroomASL.framework; sourceTree = "<group>"; };
 		3C2C862E1CF376F800A02F6C /* CleanroomLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CleanroomLogger.framework; path = Carthage/Build/Mac/CleanroomLogger.framework; sourceTree = "<group>"; };
 		3C5CBCCE1D100C43005AA485 /* MacStorageSpaceInfoLauncher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacStorageSpaceInfoLauncher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C5CBCD01D100C43005AA485 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -95,8 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C2C862F1CF376F800A02F6C /* CleanroomASL.framework in Frameworks */,
-				3C2C86311CF376F800A02F6C /* CleanroomLogger.framework in Frameworks */,
+				3C1C0C611F73A2E900E23107 /* CleanroomLogger.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,9 +125,11 @@
 		3C2A34B31CEACF8B0086A259 = {
 			isa = PBXGroup;
 			children = (
+				3C1C0C581F739F1D00E23107 /* CleanroomLogger.framework */,
+				3C1C0C5C1F73A1C700E23107 /* CleanroomLogger.framework */,
+				3C1C0C601F73A2E900E23107 /* CleanroomLogger.framework */,
 				3C152DE51D103FCF00A358B1 /* Cocoa.framework */,
 				3C5CBCE11D100D05005AA485 /* ServiceManagement.framework */,
-				3C2C862D1CF376F800A02F6C /* CleanroomASL.framework */,
 				3C2C862E1CF376F800A02F6C /* CleanroomLogger.framework */,
 				3CCF4CCE1CEAF2DC005C8E88 /* .gitignore */,
 				3C2A34BE1CEACF8B0086A259 /* MacStorageSpaceInfo */,
@@ -203,9 +203,8 @@
 				3C2A34B81CEACF8B0086A259 /* Sources */,
 				3C2A34B91CEACF8B0086A259 /* Frameworks */,
 				3C2A34BA1CEACF8B0086A259 /* Resources */,
-				3C2C86331CF376F800A02F6C /* Embed Frameworks */,
-				3C2C86341CF3773600A02F6C /* ShellScript */,
 				3C5CBCDF1D100CC7005AA485 /* CopyFiles */,
+				3C1C0C631F73A2E900E23107 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -276,12 +275,14 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = Handicraft;
 				TargetAttributes = {
 					3C2A34BB1CEACF8B0086A259 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = 7TSDMTND8S;
+						DevelopmentTeam = 82YDLVQEBS;
+						LastSwiftMigration = 0900;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 1;
@@ -290,15 +291,19 @@
 					};
 					3C2A34CA1CEACF8B0086A259 = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0900;
 						TestTargetID = 3C2A34BB1CEACF8B0086A259;
 					};
 					3C2A34D51CEACF8B0086A259 = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0900;
 						TestTargetID = 3C2A34BB1CEACF8B0086A259;
 					};
 					3C5CBCCD1D100C43005AA485 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = 7TSDMTND8S;
+						DevelopmentTeam = 82YDLVQEBS;
+						LastSwiftMigration = 0900;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 1;
@@ -362,22 +367,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		3C2C86341CF3773600A02F6C /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"$PROJECT_DIR\"/Carthage/Checkouts/CleanroomLogger/BuildControl/bin/stripCarthageFrameworks.sh";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		3C2A34B81CEACF8B0086A259 /* Sources */ = {
@@ -456,13 +445,21 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
@@ -501,13 +498,21 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
@@ -526,6 +531,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 			};
 			name = Release;
 		};
@@ -534,8 +540,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MacStorageSpaceInfo/MacStorageSpaceInfo.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 82YDLVQEBS;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
@@ -544,6 +552,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.handicraft.MacStorageSpaceInfo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -552,8 +563,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MacStorageSpaceInfo/MacStorageSpaceInfo.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 82YDLVQEBS;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
@@ -562,6 +575,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.handicraft.MacStorageSpaceInfo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -574,6 +590,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.handicraft.MacStorageSpaceInfoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MacStorageSpaceInfo.app/Contents/MacOS/MacStorageSpaceInfo";
 			};
 			name = Debug;
@@ -587,6 +605,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.handicraft.MacStorageSpaceInfoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MacStorageSpaceInfo.app/Contents/MacOS/MacStorageSpaceInfo";
 			};
 			name = Release;
@@ -599,6 +619,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.handicraft.MacStorageSpaceInfoUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = MacStorageSpaceInfo;
 			};
 			name = Debug;
@@ -611,6 +633,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.handicraft.MacStorageSpaceInfoUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = MacStorageSpaceInfo;
 			};
 			name = Release;
@@ -620,13 +644,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MacStorageSpaceInfoLauncher/MacStorageSpaceInfoLauncher.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 82YDLVQEBS;
 				INFOPLIST_FILE = MacStorageSpaceInfoLauncher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.handicraft.MacStorageSpaceInfoLauncher;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -635,13 +664,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MacStorageSpaceInfoLauncher/MacStorageSpaceInfoLauncher.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 82YDLVQEBS;
 				INFOPLIST_FILE = MacStorageSpaceInfoLauncher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.handicraft.MacStorageSpaceInfoLauncher;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

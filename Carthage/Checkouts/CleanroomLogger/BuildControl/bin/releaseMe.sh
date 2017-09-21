@@ -6,162 +6,181 @@
 # by emaloney, 7 June 2015
 #
 
+set -o pipefail		# to ensure xcodebuild pipeline errors are propagated correctly
+
 SCRIPT_NAME=$(basename "$0")
-SCRIPT_DIR=$(cd $PWD ; cd `dirname "$0"` ; echo $PWD)
+SCRIPT_DIR=$(cd "$PWD" ; cd `dirname "$0"` ; echo "$PWD")
+
+define()
+{
+	IFS='\n' read -r -d '' ${1} || true
+}
 
 showHelp()
 {
-	echo "$SCRIPT_NAME"
-	echo
-	printf "\tGenerates a new release of the project contained in this git\n"
-	printf "\trepository.\n"
-	echo
-	echo "Usage:"
-	echo
-	printf "\t$SCRIPT_NAME <release-type>\n"
-	echo
-	echo "Where:"
-	echo
-	printf "\t<release-type> is 'major', 'minor' or 'patch', depending on which\n"
-	printf "\t\tportion of the version number should be incremented for this\n"
-	printf "\t\trelease.\n"
-	echo
-	printf "\tThis script also accepts these optional command-line arguments:\n"
-	echo
-	printf "\t\t--set-version <version>\n"
-	printf "\t\t\tMake <version> the version number being released\n"
-	echo
-	printf "\t\t--auto\n"
-	printf "\t\t\tRun automatically without awaiting user confirmation\n"
-	echo
-	printf "\t\t--push\n"
-	printf "\t\t\tPush all changes when finished\n"
-	echo
-	printf "\t\t--stash-dirty-files\n"
-	printf "\t\t\tStashes dirty files before attempting to release a repo\n"
-	echo
-	printf "\t\t--commit-dirty-files\n"
-	printf "\t\t\tReleases a dirty repo by committing dirty files\n"
-	echo
-	printf "\t\t--skip-docs\n"
-	printf "\t\t\tSkips generating the documentation\n"
-	echo
-	printf "\t\t--untag <version>\n"
-	printf "\t\t\tRemove the repo tags for <version>\n"
-	echo
-	printf "\t\t--dry-run\n"
-	printf "\t\t\tShow commands to be executed instead of executing them\n"
-	echo
-	printf "\tFurther detail about these options can be found below.\n"
-	echo
-	echo "How it works"
-	echo
-	printf "\tBy default, the script inspects the appropriate property list file(s)\n"
-	printf "\tto determine the current version of the project. The script then\n"
-	printf "\tincrements the version number according to the release type\n"
-	printf "\tspecified:\n"
-	echo
-	printf "\tmajor — When the major release type is specified, the major version\n"
-	printf "\t\tcomponent is incremented, and both the minor and patch\n"
-	printf "\t\tcomponents are reset to zero. (eg., 2.1.3 becomes 3.0.0)\n"
-	echo
-	printf "\tminor — When the minor release type is specified, the major version\n"
-	printf "\t\tcomponent is not changed, while the minor component is\n"
-	printf "\t\tincremented and patch component is reset to zero.\n"
-	printf "\t\t(eg., 2.1.3 becomes 2.2.0)\n"
-	echo
-	printf "\tpatch — When the patch release type is specified, the major and minor\n"
-	printf "\t\tversion components remain unchanged, while the patch component\n"
-	printf "\t\tis incremented. (eg., 2.1.3 becomes 2.1.4)\n"
-	echo
-	printf "\tThe script then updates all necessary references to the version\n"	
-	printf "\telsewhere in the project.\n"
-	echo
-	printf "\tThen, the API documentation is rebuilt, and the repository is tagged\n"
-	printf "\twith the appropriate version number for the release.\n"
-	echo
-	printf "\tFinally, if the --push argument was supplied, the entire release is\n"	
-	printf "\tpushed to the repo's origin remote.\n"	
-	echo
-	echo "Specifying the version explicitly"
-	echo
-	printf "\tThe --set-version argument can be supplied along with a version number\n"
-	printf "\tif you wish to specify the exact version number to use.\n"
-	echo
-	printf "\tThe version number is expected to contain exactly three integer\n"
-	printf "\tcomponents separated by periods; trailing zeros are used if\n"
-	printf "\tnecessary.\n"
-	echo
-	printf "\tIf you wanted to set a release version of 4.2.1, for example, you\n"
-	printf "\tcould call the script as follows:\n"
-	echo
-	printf "\t\t$SCRIPT_NAME --set-version 4.2.1\n"
-	echo
-	printf "\tNOTE: When the --set-version argument is supplied, the release-type\n"
-	printf "\t      argument does not need to be specified (and it will be ignored\n"
-	printf "\t      if it is).\n"
-	echo
-	echo "Untagging a release"
-	echo
-	printf "\tThe script can also take an --untag <version> argument where a\n"
-	printf "\tpreviously-applied tag will be deleted from the repo."
-	echo
-	printf "\tTo remove the tag for version 4.2.1, you would execute:\n"
-	echo
-	printf "\t\t$SCRIPT_NAME --untag 4.2.1\n"
-	echo
-	printf "\tNOTE: As with the --set-version argument, when --untag is used,\n"
-	printf "\t      specifying a release-type has no effect.\n"
-	echo
-	echo "User Confirmation"
-	echo
-	printf "\tBy default, this script requires user confirmation before making\n"
-	printf "\tany changes.\n"
-	echo
-	printf "\tTo allow this script to be invoked by other scripts, an automated\n"
-	printf "\tmode is also supported.\n"
-	echo
-	printf "\tWhen this script is run in automated mode, the user will not be\n"
-	printf "\tasked to confirm any actions; all actions are performed immediately.\n"
-	echo
-	printf "\tTo enable automated mode, supply the --auto argument.\n"
-	echo
-	echo "Releasing with uncommitted changes"
-	echo
-	printf "\tNormally, this script will refuse to continue if the repository\n"
-	printf "\tis dirty; that is, if there are any modified files that haven't\n"
-	printf "\tyet been committed.\n"
-	echo
-	printf "\tHowever, you can force a release to be issued from a dirty repo\n"
-	printf "\tusing either the --stash-dirty-files or the --commit-dirty-files\n"
-	printf "\targument.\n"
-	echo
-	printf "\tThe --stash-dirty-files option causes a git stash operation to\n"
-	printf "\toccur at the start of the release process, and a stash pop at the\n"
-	printf "\tend. This safely moves the dirty files out of the way when the\n"
-	printf "\tscript it doing its thing, and restores them when it is done.\n"
-	echo	
-	printf "\tThe --commit-dirty-files option causes the dirty files to be\n"
-	printf "\tcommitted along with the other changes that occur during the\n"
-	printf "\trelease process.\n"
-	echo
-	printf "\tNote that these options are mutually exclusive and may not be\n"
-	printf "\tused with each other.\n"
-	echo
-	echo "Dry run mode"
-	echo
-	printf "\tUsing the --dry-run argument prevents the release from occurring\n"
-	printf "\tand instead shows what would occur if the release were to be\n"
-	printf "\texecuted using the supplied command-line arguments.\n"
-	echo
-	echo "Help"
-	echo
-	printf "\tThis documentation is displayed when supplying the --help (or\n"
-	printf "\t-h or -?) argument.\n"
-	echo
-	printf "\tNote that when this script displays help documentation, all other\n"
-	printf "\tcommand line arguments are ignored and no other actions are performed.\n"
-	echo
+	define HELP <<HELP
+$SCRIPT_NAME
+
+	Issues a new release of the project contained in this git repository.
+
+Usage:
+
+	$SCRIPT_NAME <release-type> [...]
+
+Where:
+
+	<release-type> is 'major', 'minor' or 'patch', depending on which portion
+		of the version number should be incremented for this release.
+
+Optional arguments:
+
+		--set-version <version>
+			Make <version> the version number being released
+
+		--auto
+			Run automatically without awaiting user confirmation
+
+		--tag
+			Tags the repo with the version number upon success
+
+		--push
+			Push all changes upon success
+
+		--amend
+			Causes any commits to be amends to the previous commit
+
+		--branch <branch>
+			Specifies <branch> be used as the git branch for operations
+
+		--commit-message-file <file>
+			Specifies the contents <file> should be used as the commit message
+
+		--no-commit
+			Skips committing any changes; implies --no-tag
+
+		--no-tag
+			Overrides --tag if specified; --no-tag is the default
+
+		--stash-dirty-files
+			Stashes dirty files before attempting to release
+
+		--commit-dirty-files
+			Commits dirty files before attempting to release
+
+		--ignore-dirty-files
+			Ignores dirty files; implies --no-commit --no-tag
+
+		--skip-docs
+			Skips generating the documentation
+
+		--skip-tests
+			Skips running the unit tests :-(
+
+		--quiet
+			Silences output
+
+		--summarize
+			Minimizes output (ideal for invoking from other scripts)
+
+	Further detail can be found below.
+
+How it works
+
+	By default, the script inspects the appropriate property list file(s)
+	to determine the current version of the project. The script then
+	increments the version number according to the release type
+	specified:
+
+	major — When the major release type is specified, the major version
+		component is incremented, and both the minor and patch
+		components are reset to zero. 2.1.3 becomes 3.0.0.
+
+	minor — When the minor release type is specified, the major version
+		component is not changed, while the minor component is
+		incremented and patch component is reset to zero.
+		2.1.3 becomes 2.2.0.
+
+	patch — When the patch release type is specified, the major and minor
+		version components remain unchanged, while the patch component
+		is incremented. 2.1.3 becomes 2.1.4.
+
+	The script then updates all necessary references to the version
+	elsewhere in the project.
+
+	Then, the API documentation is rebuilt, and the repository is tagged
+	with the appropriate version number for the release.
+
+	Finally, if the --push argument was supplied, the entire release is
+	pushed to the repo's origin remote.
+
+Specifying the version explicitly
+
+	The --set-version argument can be supplied along with a version number
+	if you wish to specify the exact version number to use.
+
+	The version number is expected to contain exactly three integer
+	components separated by periods; trailing zeros are used if
+	necessary.
+
+	If you wanted to set a release version of 4.2.1, for example, you
+	could call the script as follows:
+
+		$SCRIPT_NAME --set-version 4.2.1
+
+	NOTE: When the --set-version argument is supplied, the release-type
+	      argument does not need to be specified (and it will be ignored
+	      if it is).
+
+User Confirmation
+
+	By default, this script requires user confirmation before making
+	any changes.
+
+	To allow this script to be invoked by other scripts, an automated
+	mode is also supported.
+
+	When this script is run in automated mode, the user will not be
+	asked to confirm any actions; all actions are performed immediately.
+
+	To enable automated mode, supply the --auto argument.
+
+Releasing with uncommitted changes
+
+	Normally, this script will refuse to continue if the repository
+	is dirty; that is, if there are any modified files that haven't
+	yet been committed.
+
+	However, you can force a release to be issued from a dirty repo
+	using either the --stash-dirty-files or the --commit-dirty-files
+	argument.
+
+	The --stash-dirty-files option causes a git stash operation to
+	occur at the start of the release process, and a stash pop at the
+	end. This safely moves the dirty files out of the way when the
+	script it doing its thing, and restores them when it is done.
+
+	The --commit-dirty-files option causes the dirty files to be
+	committed along with the other changes that occur during the
+	release process.
+
+	In addition, an --ignore-dirty-files option is available, which
+	lets you go through the entire release process, but stops short
+	of committing and tagging. This allows you to run through the
+	entire release process without committing you to committing.
+
+	Note that these options are mutually exclusive and may not be
+	used with each other.
+
+Help
+
+	This documentation is displayed when supplying the --help (or -help, -h,
+	or -?) argument.
+
+	Note that when this script displays help documentation, all other
+	command line arguments are ignored and no other actions are performed.
+
+HELP
+	printf "$HELP" | less
 }
 
 printError()
@@ -195,15 +214,26 @@ validateVersion()
 
 updateStatus()
 {
-	echo 
-	echo "$1"
-	echo
+	if [[ ! $QUIET ]]; then
+		echo
+		echo "$1"
+		echo
+	fi
+}
+
+summarize()
+{
+	if [[ $SUMMARIZE ]]; then
+		printf "\t...%s\n" "$1"
+	fi
 }
 
 confirmationPrompt()
 {
-	echo
-	echo $1
+	if [[ ! $QUIET || ! $AUTOMATED_MODE ]]; then
+		echo
+		echo $1
+	fi
 	if [[ -z $AUTOMATED_MODE ]]; then
 		echo
 		read -p "Are you sure you want to do this? " -n 1 -r
@@ -216,18 +246,15 @@ confirmationPrompt()
 
 executeCommand()
 {
-	if [[ $DRY_RUN_MODE ]]; then
-		if [[ ! $DID_DRY_RUN_MSG ]]; then
-			printf "\t!!! DRY RUN MODE - Will only show commands, not execute them !!!\n"
-			echo
-			DID_DRY_RUN_MSG=1
-		fi
-		echo "> $1"
+	unset _CMD
+	if [[ $QUIET ]]; then
+		_CMD="set -o pipefail && $1 > /dev/null"
 	else
-		eval "$1"
-		if [[ $? != 0 ]]; then
-			exitWithError "Command failed"
-		fi
+		_CMD="set -o pipefail && $1"
+	fi
+	eval $_CMD
+	if [[ $? != 0 ]]; then
+		exitWithError "Command failed: $_CMD"
 	fi
 }
 
@@ -249,18 +276,13 @@ fi
 #
 # parse the command-line arguments
 #
+AMEND_ARGS=""
+BRANCH=master
+STASH_DIRTY_FILES=0
+COMMIT_DIRTY_FILES=0
+IGNORE_DIRTY_FILES=0
 while [[ $1 ]]; do
 	case $1 in
-	--untag)
-		shift
-		if [[ -z $1 ]]; then
-			exitWithErrorSuggestHelp "The $1 argument expects a value"
-		else
-			validateVersion $1 "the version passed with the --untag argument"
-			UNTAG_VERSION=$1
-		fi
-		;;
-	
 	--set-version)
 		shift
 		if [[ -z $1 ]]; then
@@ -270,42 +292,94 @@ while [[ $1 ]]; do
 			SET_VERSION=$1
 		fi
 		;;
-	
+
 	--auto|-a)
 		AUTOMATED_MODE=1
 		;;
-		
+
+	--amend)
+		AMEND_ARGS="--amend --no-edit"
+		;;
+
 	--stash-dirty-files)
 		STASH_DIRTY_FILES=1
 		;;
-		
+
 	--commit-dirty-files)
 		COMMIT_DIRTY_FILES=1
 		;;
-		
-	--skip-docs)
-		SKIP_DOCUMENTATION=1
+
+	--ignore-dirty-files)
+		IGNORE_DIRTY_FILES=1
+		NO_COMMIT=1
+		NO_TAG=1
 		;;
-		
-	--dry-run)
-		DRY_RUN_MODE=1
+
+	--no-commit)
+		NO_COMMIT=1
+		NO_TAG=1
 		;;
-	
+
+	--no-tag)
+		NO_TAG=1
+		;;
+
+	--tag)
+		TAG_WHEN_DONE=1
+		;;
+
 	--push)
 		PUSH_WHEN_DONE=1
 		;;
-	
-	--help|-h|-\?)
+
+	--branch|-b)
+		if [[ $2 ]]; then
+			BRANCH="$2"
+			shift
+		fi
+		;;
+
+	--commit-message-file|-m)
+		if [[ $2 ]]; then
+			COMMIT_MESSAGE=`cat "$2"`
+			shift
+		fi
+		;;
+
+	--skip-docs)
+		SKIP_DOCUMENTATION=1
+		;;
+
+	--skip-tests)
+		SKIP_TESTS=1
+		;;
+
+	--quiet|-q)
+		QUIET=1
+		QUIET_ARG="-q"
+		;;
+
+	--summarize|-z)
+		SUMMARIZE=1
+		QUIET=1
+		QUIET_ARG="-q"
+		;;
+
+	--rebase)
+		REBASE=1
+		;;
+
+	--help|-help|-h|-\?)
 		SHOW_HELP=1
 		;;
-		
+
 	-*)
 		exitWithErrorSuggestHelp "Unrecognized argument: $1"
 		;;
-		
+
 	*)
 		if [[ -z $ARGS ]]; then
-			ARGS=$1		
+			ARGS=$1
 		else
 			ARGS="$ARGS $1"
 		fi
@@ -321,7 +395,7 @@ fi
 for ARG in $ARGS; do
 	if [[ -z $RELEASE_TYPE ]]; then
 		RELEASE_TYPE="$ARG"
-	else 
+	else
 		exitWithErrorSuggestHelp "Unrecognized argument: $ARG"
 	fi
 done
@@ -329,21 +403,16 @@ done
 #
 # validate the input
 #
-if [[ $STASH_DIRTY_FILES && $COMMIT_DIRTY_FILES ]]; then
-	exitWithErrorSuggestHelp "The --stash-dirty-files and --commit-dirty-files arguments are mutually exclusive and can't be used with each other"
-fi
-if [[ ! -z $UNTAG_VERSION && ! -z $SET_VERSION ]]; then
-	exitWithErrorSuggestHelp "The --untag and --set-version arguments are mutually exclusive and can't be used with each other"
+if [[ $(( $STASH_DIRTY_FILES + $COMMIT_DIRTY_FILES + $IGNORE_DIRTY_FILES )) > 1 ]]; then
+	exitWithErrorSuggestHelp "The --stash-dirty-files, --commit-dirty-files and --ignore-dirty-files arguments are mutually exclusive and can't be used with each other"
 fi
 if [[ ! -z $RELEASE_TYPE ]]; then
-	if [[ ! -z $UNTAG_VERSION ]]; then
-		exitWithErrorSuggestHelp "The release type can't be specified when --untag is used"
-	elif [[ ! -z $SET_VERSION ]]; then
+	if [[ ! -z $SET_VERSION ]]; then
 		exitWithErrorSuggestHelp "The release type can't be specified when --set-version is used"
 	elif [[ $RELEASE_TYPE != "major" && $RELEASE_TYPE != "minor" && $RELEASE_TYPE != "patch" ]]; then
 		exitWithErrorSuggestHelp "The release type argument must be one of: 'major', 'minor' or 'patch'"
 	fi
-elif [[ -z $UNTAG_VERSION && -z $SET_VERSION ]]; then
+elif [[ -z $SET_VERSION ]]; then
 	if [[ -z $RELEASE_TYPE ]]; then
 		exitWithErrorSuggestHelp "The release type ('major', 'minor' or 'patch') must be specified as an argument."
 	fi
@@ -352,32 +421,16 @@ fi
 #
 # figure out what the current version is
 #
-PLIST_BUDDY=/usr/libexec/PlistBuddy
-if [[ ! -x "$PLIST_BUDDY" ]]; then
-	exitWithErrorSuggestHelp "Expected to find PlistBuddy at path $PLIST_BUDDY"
-fi
-FRAMEWORK_PLIST_FILE="Info-Framework.plist"
+FRAMEWORK_PLIST_FILE="Info-Target.plist"
 FRAMEWORK_PLIST_PATH="$SCRIPT_DIR/../$FRAMEWORK_PLIST_FILE"
+PLIST_BUDDY=/usr/libexec/PlistBuddy
 CURRENT_VERSION=`$PLIST_BUDDY "$FRAMEWORK_PLIST_PATH" -c "Print :CFBundleShortVersionString"`
 validateVersion "$CURRENT_VERSION" "the CFBundleShortVersionString value in the $FRAMEWORK_PLIST_FILE file"
 
 #
 # now, do the right thing depending on the command-line arguments
 #
-if [[ ! -z $UNTAG_VERSION ]]; then
-	confirmationPrompt "Removing repo tag for version $UNTAG_VERSION"
-
-	updateStatus "Deleting tag for $UNTAG_VERSION release"
-
-	#
-	# we're being asked to untag a previous version; easy peasy
-	#
-	executeCommand "git tag --delete $UNTAG_VERSION"
-	if [[ $PUSH_WHEN_DONE ]]; then
-		executeCommand "git push origin :$UNTAG_VERSION"
-	fi
-	exit 0
-elif [[ ! -z $SET_VERSION ]]; then
+if [[ ! -z $SET_VERSION ]]; then
 	VERSION=$SET_VERSION
 elif [[ ! -z $RELEASE_TYPE ]]; then
 	MAJOR_VERSION=`echo $CURRENT_VERSION | awk -F . '{print int($1)}'`
@@ -390,39 +443,63 @@ elif [[ ! -z $RELEASE_TYPE ]]; then
 		MINOR_VERSION=0
 		PATCH_VERSION=0
 		;;
-		
+
 	minor)
 		MINOR_VERSION=$(( $MINOR_VERSION + 1 ))
 		PATCH_VERSION=0
 		;;
-		
+
 	patch)
 		PATCH_VERSION=$(( $PATCH_VERSION + 1 ))
 		;;
 	esac
-	
+
 	VERSION="${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}"
 fi
 
 #
 # try to figure out the origin repo name
 #
-REPO_NAME=$(git remote -v | awk '{print $2}' | xargs basename | sed 'sq.git$qq')
+REPO_NAME=$(git remote -v | grep "^origin" | grep "(fetch)" | awk '{print $2}' | xargs basename | sed 'sq.git$qq')
 if [[ -z "$REPO_NAME" ]]; then
 	exitWithErrorSuggestHelp "Couldn't determine repo name"
 fi
 
 #
+# output a warning if there are conflicting tag flags
+#
+if [[ $TAG_WHEN_DONE && $NO_TAG ]]; then
+	exitWithErrorSuggestHelp "--tag can't be specified with --no-tag, --no-commit or --ignore-dirty-files"
+fi
+
+#
 # see if we've got uncommitted changes
 #
-git diff-index --quiet HEAD -- ; REPO_IS_DIRTY=$?
-if [[ $REPO_IS_DIRTY != 0 && -z $STASH_DIRTY_FILES && -z $COMMIT_DIRTY_FILES ]]; then
-	exitWithErrorSuggestHelp "You have uncommitted changes in this repo; won't do anything" "(use --stash-dirty-files or --commit-dirty-files to bypass this error)"
+git rev-parse --quiet --verify HEAD > /dev/null
+if [[ $? == 0 ]]; then
+	git diff-index --quiet HEAD -- ; REPO_IS_DIRTY=$?
+else
+	# if HEAD doesn't exist (which is how we get here), then treat the
+	# repo as if it were dirty
+	REPO_IS_DIRTY=1
+fi
+if [[ $REPO_IS_DIRTY != 0 && $(( $STASH_DIRTY_FILES + $COMMIT_DIRTY_FILES + $IGNORE_DIRTY_FILES )) == 0 ]]; then
+	exitWithErrorSuggestHelp "You have uncommitted changes in this repo; won't do anything" "(use --stash-dirty-files, --commit-dirty-files or\n\t--ignore-dirty-files to bypass this error)"
+fi
+REPO_URL=`git remote get-url --push origin 2> /dev/null`
+if [[ $? == 0 ]]; then
+	git ls-remote --heads $REPO_URL $BRANCH | grep "refs/heads/$BRANCH" > /dev/null
+	if [[ $? == 0 ]]; then
+		REMOTE_BRANCH_EXISTS=1
+	fi
+fi
+if [[ ! $REMOTE_BRANCH_EXISTS ]]; then
+	GIT_PUSH_ARGS="--set-upstream origin $BRANCH"
 fi
 
 confirmationPrompt "Releasing $REPO_NAME $VERSION (current is $CURRENT_VERSION)"
 
-if [[ $REPO_IS_DIRTY && $STASH_DIRTY_FILES ]]; then
+if [[ $REPO_IS_DIRTY && $STASH_DIRTY_FILES > 0 ]]; then
 	updateStatus "Stashing modified files"
 	executeCommand "git stash"
     trap cleanupDirtyStash EXIT
@@ -431,51 +508,147 @@ fi
 #
 # make sure it builds
 #
-updateStatus "Verifying that $REPO_NAME builds"
 XCODEBUILD=/usr/bin/xcodebuild
+XCODEBUILD_CMD="$XCODEBUILD"
+updateStatus "Verifying that $REPO_NAME builds"
+if [[ $QUIET ]]; then
+	XCODEBUILD_CMD="$XCODEBUILD -quiet"
+fi
 if [[ ! -x "$XCODEBUILD" ]]; then
 	exitWithErrorSuggestHelp "Expected to find xcodebuild at path $XCODEBUILD"
 fi
 
 #
-# build each scheme we can find
+# use xcpretty if it is available
 #
-xcodebuild -list | grep "\s${REPO_NAME}" | grep -v Tests | sort | uniq | sed "s/^[ \t]*//" | while read SCHEME
-do
-	updateStatus "Building: $SCHEME..."
-	executeCommand "$XCODEBUILD -project ${REPO_NAME}.xcodeproj -scheme \"$SCHEME\" -configuration Release clean build"
+XCODEBUILD_PIPETO=""
+XCPRETTY=`which xcpretty`
+if [[ $? == 0 ]]; then
+	XCODEBUILD_PIPETO="| $XCPRETTY"
+fi
+
+#
+# determine build settings
+#
+PROJECT_SPECIFIER="-project CleanroomLogger.xcodeproj"
+COMPILE_PLATFORMS="iOS macOS tvOS watchOS"
+PROJECT_NAME="CleanroomLogger"
+
+testActionForPlatform()
+{
+	case $1 in
+	iOS) 		echo "test";;
+	macOS) 		echo "test";;
+	tvOS) 		echo "test";;
+	watchOS)	echo "build";;
+	esac
+}
+
+runDestinationForPlatform()
+{
+	case $1 in
+	iOS)
+		SIMULATOR_ID=`xcrun simctl list | grep -v unavailable | grep "iPad Pro" | grep inch | tail -1 | sed "s/^.*inch) (//" | sed "s/).*$//"`
+		echo "id=$SIMULATOR_ID"
+		;;
+
+	macOS)
+		echo "platform=macOS"
+		;;
+
+	tvOS)
+		SIMULATOR_ID=`xcrun simctl list | grep -v unavailable | grep "Apple TV" | tail -1 | sed "s/) (.*)\$//" | sed "s/^.*(//"`
+		echo "id=$SIMULATOR_ID"
+		;;
+
+	watchOS)
+		SIMULATOR_ID=`xcrun simctl list | grep -v unavailable | grep -v "Watch:" | grep "Apple Watch Series" | tail -1 | sed "s/) (.*)\$//" | sed "s/^.*(//"`
+		echo "id=$SIMULATOR_ID"
+		;;
+
+	esac
+}
+
+#
+# build for each platform
+#
+for PLATFORM in $COMPILE_PLATFORMS; do
+	updateStatus "Building: $PROJECT_NAME for $PLATFORM..."
+	summarize "building $PROJECT_NAME for $PLATFORM"
+	if [[ $SKIP_TESTS ]]; then
+		BUILD_ACTION="clean build"
+	else
+		BUILD_ACTION="clean $(testActionForPlatform $PLATFORM)"
+	fi
+	RUN_DESTINATION="$(runDestinationForPlatform $PLATFORM)"
+	if [[ $QUIET ]]; then
+		executeCommand "$XCODEBUILD_CMD $PROJECT_SPECIFIER -scheme \"${REPO_NAME}\" -configuration Debug -destination \"$RUN_DESTINATION\" $BUILD_ACTION $XCODEBUILD_PIPETO" 2&> /dev/null
+	else
+		executeCommand "$XCODEBUILD_CMD $PROJECT_SPECIFIER -scheme \"${REPO_NAME}\" -configuration Debug -destination \"$RUN_DESTINATION\" $BUILD_ACTION $XCODEBUILD_PIPETO"
+	fi
 done
 
-xcodebuild -list | grep "\s${REPO_NAME}" | grep UnitTests | sort | uniq | sed "s/^[ \t]*//" | while read TARGET
-do
-	SCHEME=$(echo "$TARGET" | sed sqUnitTestsqq)
-	updateStatus "Executing unit tests: $TARGET for $SCHEME..."
-	executeCommand "$XCODEBUILD -project ${REPO_NAME}.xcodeproj -scheme \"$SCHEME\" -configuration Release clean test"
-done
-
+#
+# bump version numbers
+#
 updateStatus "Adjusting version numbers"
 executeCommand "$PLIST_BUDDY \"$FRAMEWORK_PLIST_PATH\" -c \"Set :CFBundleShortVersionString $VERSION\""
-executeCommand "agvtool bump"
+agvtool bump > /dev/null
+summarize "bumped version to $VERSION from $CURRENT_VERSION for $RELEASE_TYPE release"
 
-if [[ ! $SKIP_DOCUMENTATION ]]; then
-	updateStatus "Rebuilding documentation"
-	executeCommand "$SCRIPT_DIR/generateDocumentationForAPI.sh"
-	executeCommand "git add Documentation/."
-fi
-
-updateStatus "Committing changes"
+#
+# commit changes
+#
 BUILD_NUMBER=`agvtool vers -terse`
-COMMIT_COMMENT="Release $VERSION (build $BUILD_NUMBER)"
-if [[ $REPO_IS_DIRTY && $COMMIT_DIRTY_FILES ]]; then
-	COMMIT_COMMENT="$COMMIT_COMMENT -- committed with other changes"
+if [[ -z $COMMIT_MESSAGE ]]; then
+	COMMIT_MESSAGE="Release $VERSION (build $BUILD_NUMBER)"
+	if [[ $REPO_IS_DIRTY && $COMMIT_DIRTY_FILES > 0 ]]; then
+		COMMIT_MESSAGE="$COMMIT_MESSAGE -- committed with other changes"
+	fi
+else
+	COMMIT_MESSAGE="[$VERSION] $COMMIT_MESSAGE"
 fi
-executeCommand "git commit -a -m '$COMMIT_COMMENT'"
+if [[ -z $NO_COMMIT ]]; then
+	updateStatus "Committing changes"
+	printf "%s" "$COMMIT_MESSAGE" | git commit -a $QUIET_ARG $AMEND_ARGS -F -
+	summarize "committed changes to \"$BRANCH\" branch"
+else
+	updateStatus "! Not committing changes; --no-commit or --ignore-dirty-files was specified"
+	printf "> To commit manually, use:\n\n    git commit -a -m '$COMMIT_MESSAGE'\n"
+fi
 
-updateStatus "Tagging repo for $VERSION release"
-executeCommand "git tag -a $VERSION -m 'Release $VERSION issued by $SCRIPT_NAME'"
+#
+# rebase with existing changes if needed
+#
+if [[ $REBASE && $REMOTE_BRANCH_EXISTS ]]; then
+	updateStatus "Rebasing with existing $BRANCH branch"
+	executeCommand "git pull origin $BRANCH $QUIET_ARG --rebase --allow-unrelated-histories --strategy=recursive -Xtheirs"
+	summarize "rebased \"$BRANCH\" branch"
+fi
 
-if [[ $PUSH_WHEN_DONE ]]; then
-	updateStatus "Pushing changes to origin"
-	executeCommand "git push"
-	executeCommand "git push --tags"
+#
+# tag repo with new version number
+#
+if [[ $TAG_WHEN_DONE && -z $NO_COMMIT && -z $NO_TAG ]]; then
+	updateStatus "Tagging repo for $VERSION release"
+	executeCommand "git tag -a $VERSION -m 'Release $VERSION issued by $SCRIPT_NAME'"
+	summarize "tagged \"$BRANCH\" branch with $VERSION"
+else
+	updateStatus "! Not tagging repo; --tag was not specified"
+	printf "> To tag manually, use:\n\n    git tag -a $VERSION -m 'Release $VERSION issued by $SCRIPT_NAME'\n"
+fi
+
+#
+# push if we should
+#
+if [[ $PUSH_WHEN_DONE && -z $NO_COMMIT ]]; then
+	ORIGIN_URL=`git remote get-url --push origin`
+	updateStatus "Pushing changes to \"$BRANCH\" branch of $ORIGIN_URL"
+	executeCommand "git push $QUIET_ARG $GIT_PUSH_ARGS"
+	if [[ $TAG_WHEN_DONE && !$NO_TAG ]]; then
+		executeCommand "git push --tags $QUIET_ARG"
+	fi
+	summarize "pushed changes to \"$BRANCH\" branch of $ORIGIN_URL"
+else
+	printf "\n> REMEMBER: The release isn't done until you push the changes! Don't forget to:\n\n    git push && git push --tags\n"
 fi

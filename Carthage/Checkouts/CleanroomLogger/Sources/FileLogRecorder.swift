@@ -18,12 +18,12 @@ import Dispatch
  file. Use a `RotatingLogFileRecorder` instead if you'd rather not have to
  concern yourself with such details.
  */
-public class FileLogRecorder: LogRecorderBase
+open class FileLogRecorder: LogRecorderBase
 {
     /** The path of the file to which log entries will be written. */
-    public let filePath: String
+    open let filePath: String
 
-    private let file: UnsafeMutablePointer<FILE>
+    private let file: UnsafeMutablePointer<FILE>?
     private let newlines: [Character] = ["\n", "\r"]
 
     /**
@@ -76,24 +76,24 @@ public class FileLogRecorder: LogRecorderBase
      - parameter currentQueue: The GCD queue on which the function is being
      executed.
 
-     - parameter synchronousMode: If `true`, the receiver should record the log
-     entry synchronously and flush any buffers before returning.
+     - parameter synchronousMode: If `true`, the recording is being done in
+     synchronous mode, and the recorder should act accordingly.
     */
-    public override func recordFormattedMessage(message: String, forLogEntry entry: LogEntry, currentQueue: dispatch_queue_t, synchronousMode: Bool)
+    open override func record(message: String, for entry: LogEntry, currentQueue: DispatchQueue, synchronousMode: Bool)
     {
         var addNewline = true
         let chars = message.characters
         if chars.count > 0 {
-            let lastChar = chars[chars.endIndex.predecessor()]
+            let lastChar = chars[chars.index(before: chars.endIndex)]
             addNewline = !newlines.contains(lastChar)
         }
 
-        var writeStr = message
+        fputs(message, file)
+
         if addNewline {
-            writeStr += "\n"
+            fputc(0x0A, file)
         }
 
-        fputs(writeStr, file)
         fflush(file)
     }
 }

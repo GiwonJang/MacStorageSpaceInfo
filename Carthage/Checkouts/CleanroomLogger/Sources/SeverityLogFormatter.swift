@@ -16,36 +16,42 @@ public enum SeverityStyle
     public enum TextRepresentation {
         /** Specifies that the `LogSeverity` should be output as a
          human-readable word with the initial capitalization. */
-        case Capitalized
+        case capitalized
 
         /** Specifies that the `LogSeverity` should be output as a 
          human-readable word in all lowercase characters. */
-        case Lowercase
+        case lowercase
 
         /** Specifies that the `LogSeverity` should be output as a 
          human-readable word in all uppercase characters. */
-        case Uppercase
-
+        case uppercase
+        
         /** Specifies that the `rawValue` of the `LogSeverity` should be output
          as an integer within a string. */
-        case Numeric
+        case numeric
+        
+        /** Specifies that the `rawValue` of the `LogSeverity` should be output
+         as an emoji character whose color represents the level of severity. 
+         The specific characters used to represent each severity level may
+         change over time, so this representation is *not* suitable for 
+         parsing. */
+        case colorCoded
     }
 
     /** Indicates that the `LogSeverity` will be output as a human-readable
      string with initial capitalization. No padding, truncation or alignment
      will occur. */
-    case Simple
+    case simple
 
-    /** Indicates that the `LogSeverity` will be output as a human-readable
-     string in all uppercase. The string will be padded with spaces to be the
-     maximum length of any possible `LogSeverity` value, and the text will be
-     right-aligned within that field. No truncation will occur. */
-    case Xcode
+    /** Indicates that the `LogSeverity` will be output using defaults
+     suitable for viewing within Xcode. The current implementation
+     uses a `TextRepresentation` of `.colorCoded`, making it easier to spot
+     important messages in the Xcode console. */
+    case xcode
 
     /** Indicates that the `LogSeverity` will be output as an integer contained
      in a string. No padding, truncation or alignment will occur. */
-    case Numeric
-
+    case numeric
 
     /** Allows customization of the `SeverityStyle`. The `LogSeverity` value
      will be converted to text as specified by the `TextRepresentation` value.
@@ -54,39 +60,37 @@ public enum SeverityStyle
      padded with spaces as appropriate. The value of `rightAlign` determines
      how padding occurs.
      */
-    case Custom(textRepresentation: TextRepresentation, truncateAtWidth: Int?, padToWidth: Int?, rightAlign: Bool)
+    case custom(textRepresentation: TextRepresentation, truncateAtWidth: Int?, padToWidth: Int?, rightAlign: Bool)
 }
 
-extension SeverityStyle
+fileprivate extension SeverityStyle
 {
-    private var textRepresentation: TextRepresentation {
+    var textRepresentation: TextRepresentation {
         switch self {
-        case .Simple:                       return .Capitalized
-        case .Xcode:                        return .Uppercase
-        case .Numeric:                      return .Numeric
-        case .Custom(let rep, _, _, _):     return rep
+        case .simple:                       return .capitalized
+        case .xcode:                        return .colorCoded
+        case .numeric:                      return .numeric
+        case .custom(let rep, _, _, _):     return rep
         }
     }
 
-    private var truncateAtWidth: Int? {
+    var truncateAtWidth: Int? {
         switch self {
-        case .Custom(_, let trunc, _, _):   return trunc
+        case .custom(_, let trunc, _, _):   return trunc
         default:                            return nil
         }
     }
 
-    private var padToWidth: Int? {
+    var padToWidth: Int? {
         switch self {
-        case .Xcode:                        return 7
-        case .Custom(_, _, let pad, _):     return pad
+        case .custom(_, _, let pad, _):     return pad
         default:                            return nil
         }
     }
 
-    private var rightAlign: Bool {
+    var rightAlign: Bool {
         switch self {
-        case .Xcode:                        return true
-        case .Custom(_, _, _, let right):   return right
+        case .custom(_, _, _, let right):   return right
         default:                            return false
         }
     }
@@ -94,14 +98,30 @@ extension SeverityStyle
 
 extension SeverityStyle.TextRepresentation
 {
-    private func formatSeverity(severity: LogSeverity)
+    /**
+     Returns a specific text representation of a given `LogSeverity` value.
+
+     - parameter severity: The `LogSeverity` for which a text representation is
+     sought.
+     
+     - returns: A `String` containing a text representation of `severity`.
+     */
+    public func format(severity: LogSeverity)
         -> String
     {
         switch self {
-        case .Capitalized:  return severity.description.capitalizedString
-        case .Lowercase:    return severity.description.lowercaseString
-        case .Uppercase:    return severity.description.uppercaseString
-        case .Numeric:      return "\(severity.rawValue)"
+        case .capitalized:  return severity.description.capitalized
+        case .lowercase:    return severity.description.lowercased()
+        case .uppercase:    return severity.description.uppercased()
+        case .numeric:      return String(describing: severity.rawValue)
+        case .colorCoded:
+            switch severity {
+            case .verbose:  return "▫️"
+            case .debug:    return "▪️"
+            case .info:     return "🔷"
+            case .warning:  return "🔶"
+            case .error:    return "❌"
+            }
         }
     }
 }
@@ -116,7 +136,7 @@ extension SeverityStyle.TextRepresentation
 public struct SeverityLogFormatter: LogFormatter
 {
     /** The `SeverityStyle` that determines the return value of the
-     receiver's `formatLogEntry()` function. */
+     receiver's `format(_:)` function. */
     public let style: SeverityStyle
 
     /**
@@ -125,7 +145,7 @@ public struct SeverityLogFormatter: LogFormatter
      
      - parameter style: The `SeverityStyle` to use.
      */
-    public init(style: SeverityStyle = .Simple)
+    public init(style: SeverityStyle = .simple)
     {
         self.style = style
     }
@@ -138,16 +158,16 @@ public struct SeverityLogFormatter: LogFormatter
 
      - returns: The formatted result; never `nil`.
      */
-    public func formatLogEntry(entry: LogEntry)
+    public func format(_ entry: LogEntry)
         -> String?
     {
-        var severityTag = style.textRepresentation.formatSeverity(entry.severity)
+        var severityTag = style.textRepresentation.format(severity: entry.severity)
 
         if let trunc = style.truncateAtWidth {
             if severityTag.characters.count > trunc {
                 let startIndex = severityTag.characters.startIndex
-                let endIndex = startIndex.advancedBy(trunc)
-                severityTag = severityTag.substringToIndex(endIndex)
+                let endIndex = severityTag.characters.index(startIndex, offsetBy: trunc)
+                severityTag = String(severityTag[..<endIndex])
             }
         }
 

@@ -7,6 +7,7 @@
 //
 
 import Dispatch
+import Foundation
 
 /**
  `Log` is the primary public API for CleanroomLogger.
@@ -79,29 +80,29 @@ import Dispatch
  */
 public struct Log
 {
-    /** The `LogChannel` that can be used to perform logging at the `.Error`
+    /** The `LogChannel` that can be used to perform logging at the `.error`
      log severity level. Will be `nil` if logging hasn't yet been enabled, or
-     if logging for the `.Error` severity has not been configured. */
+     if logging for the `.error` severity has not been configured. */
     public private(set) static var error: LogChannel?
 
-    /** The `LogChannel` that can be used to perform logging at the `.Warning`
+    /** The `LogChannel` that can be used to perform logging at the `.warning`
      log severity level. Will be `nil` if logging hasn't yet been enabled, or
-     if logging for the `.Warning` severity has not been configured. */
+     if logging for the `.warning` severity has not been configured. */
     public private(set) static var warning: LogChannel?
 
-    /** The `LogChannel` that can be used to perform logging at the `.Info`
+    /** The `LogChannel` that can be used to perform logging at the `.info`
      log severity level. Will be `nil` if logging hasn't yet been enabled, or
-     if logging for the `.Info` severity has not been configured. */
+     if logging for the `.info` severity has not been configured. */
     public private(set) static var info: LogChannel?
 
-    /** The `LogChannel` that can be used to perform logging at the `.Debug`
+    /** The `LogChannel` that can be used to perform logging at the `.debug`
      log severity level. Will be `nil` if logging hasn't yet been enabled, or
-     if logging for the `.Debug` severity has not been configured. */
+     if logging for the `.debug` severity has not been configured. */
     public private(set) static var debug: LogChannel?
 
-    /** The `LogChannel` that can be used to perform logging at the `.Verbose`
+    /** The `LogChannel` that can be used to perform logging at the `.verbose`
      log severity level. Will be `nil` if logging hasn't yet been enabled, or
-     if logging for the `.Verbose` severity has not been configured. */
+     if logging for the `.verbose` severity has not been configured. */
     public private(set) static var verbose: LogChannel?
 
     /**
@@ -114,7 +115,7 @@ public struct Log
      - warning: Setting either `debugMode` or `verboseDebugMode` to `true` will
      result in `synchronousMode` being used when recording log entries.
      Synchronous mode is helpful while debugging, as it ensures that logs are
-     always up-to-date when debug breakpoints are hit. However, synchronous 
+     always up-to-date when debug breakpoints are hit. However, synchronous
      mode can have a negative influence on performance and is therefore not
      recommended for use in production code.
 
@@ -123,37 +124,30 @@ public struct Log
      ignored.
 
      - parameter debugMode: If `true`, the value of `minimumSeverity` will
-     be lowered (if necessary) to `.Debug` and `synchronousMode` will be used
+     be lowered (if necessary) to `.debug` and `synchronousMode` will be used
      when recording log entries.
 
-     - parameter verboseDebugMode: If `true`, the value of `minimumSeverity` 
-     will be lowered (if necessary) to `.Verbose` and `synchronousMode` will be
+     - parameter verboseDebugMode: If `true`, the value of `minimumSeverity`
+     will be lowered (if necessary) to `.verbose` and `synchronousMode` will be
      used when recording log entries.
 
-     - parameter timestampStyle: Governs the formatting of the timestamp in the
-     log output. Pass `nil` to suppress output of the timestamp.
+     - parameter stdStreamsMode: A `StandardStreamsMode` value that governs
+     when standard console streams (i.e., `stdout` and `stderr`) should be used
+     for recording log output.
 
-     - parameter severityStyle: Governs the formatting of the `LogSeverity` in
-     the log output. Pass `nil` to suppress output of the severity.
-
+     - parameter mimicOSLogOutput: If `true`, any output sent to `stdout` will
+     be formatted in such a way as to mimic the output seen when `os_log()` is
+     used.
+     
      - parameter showCallSite: If `true`, the source file and line indicating
      the call site of the log request will be added to formatted log messages.
-
-     - parameter showCallingThread: If `true`, a hexadecimal string containing
-     an opaque identifier for the calling thread will be added to formatted log
-     messages.
-
-     - parameter suppressColors: If `true`, log message colorization will be
-     disabled. By default, if the third-party XcodeColors plug-in for Xcode
-     is installed, and if CleanroomLogger detects that it is enabled, log
-     messages are colorized automatically.
-
+    
      - parameter filters: The `LogFilter`s to use when deciding whether a given
      `LogEntry` should be passed along for recording.
      */
-    public static func enable(minimumSeverity minimumSeverity: LogSeverity = .Info, debugMode: Bool = false, verboseDebugMode: Bool = false, timestampStyle: TimestampStyle? = .Default, severityStyle: SeverityStyle? = .Xcode, showCallSite: Bool = true, showCallingThread: Bool = false, suppressColors: Bool = false, filters: [LogFilter] = [])
+    public static func enable(minimumSeverity: LogSeverity = .info, debugMode: Bool = false, verboseDebugMode: Bool = false, stdStreamsMode: ConsoleLogConfiguration.StandardStreamsMode = .useAsFallback, mimicOSLogOutput: Bool = true, showCallSite: Bool = true, filters: [LogFilter] = [])
     {
-        let config = XcodeLogConfiguration(minimumSeverity: minimumSeverity, debugMode: debugMode, verboseDebugMode: verboseDebugMode, timestampStyle: timestampStyle, severityStyle: severityStyle, showCallSite: showCallSite, showCallingThread: showCallingThread, suppressColors: suppressColors, filters: filters)
+        let config = XcodeLogConfiguration(minimumSeverity: minimumSeverity, debugMode: debugMode, verboseDebugMode: verboseDebugMode, stdStreamsMode: stdStreamsMode, mimicOSLogOutput: mimicOSLogOutput, showCallSite: showCallSite, filters: filters)
 
         enable(configuration: config)
     }
@@ -164,7 +158,7 @@ public struct Log
      - parameter configuration: The `LogConfiguration` to use for controlling
      the behavior of logging.
      */
-    public static func enable(configuration configuration: LogConfiguration)
+    public static func enable(configuration: LogConfiguration)
     {
         enable(configuration: [configuration])
     }
@@ -175,7 +169,7 @@ public struct Log
      - parameter configuration: An array of `LogConfiguration`s specifying
      the behavior of logging.
      */
-    public static func enable(configuration configuration: [LogConfiguration])
+    public static func enable(configuration: [LogConfiguration])
     {
         enable(receptacle: LogReceptacle(configuration: configuration))
     }
@@ -190,14 +184,14 @@ public struct Log
      - parameter receptacle: The `LogReceptacle` to use when creating the
      `LogChannel`s for the five severity levels.
      */
-    public static func enable(receptacle receptacle: LogReceptacle)
+    public static func enable(receptacle: LogReceptacle)
     {
         enable(
-            errorChannel: createLogChannelWithSeverity(.Error, forReceptacle: receptacle),
-            warningChannel: createLogChannelWithSeverity(.Warning, forReceptacle: receptacle),
-            infoChannel: createLogChannelWithSeverity(.Info, forReceptacle: receptacle),
-            debugChannel: createLogChannelWithSeverity(.Debug, forReceptacle: receptacle),
-            verboseChannel: createLogChannelWithSeverity(.Verbose, forReceptacle: receptacle)
+            errorChannel: createLogChannel(severity: .error, receptacle: receptacle),
+            warningChannel: createLogChannel(severity: .warning, receptacle: receptacle),
+            infoChannel: createLogChannel(severity: .info, receptacle: receptacle),
+            debugChannel: createLogChannel(severity: .debug, receptacle: receptacle),
+            verboseChannel: createLogChannel(severity: .verbose, receptacle: receptacle)
         )
     }
 
@@ -212,55 +206,53 @@ public struct Log
      needless overhead will be added to the application.
 
      - parameter errorChannel: The `LogChannel` to use for logging messages with
-     a `severity` of `.Error`.
+     a `severity` of `.error`.
 
      - parameter warningChannel: The `LogChannel` to use for logging messages
-     with a `severity` of `.Warning`.
+     with a `severity` of `.warning`.
 
      - parameter infoChannel: The `LogChannel` to use for logging messages with
-     a `severity` of `.Info`.
+     a `severity` of `.info`.
 
      - parameter debugChannel: The `LogChannel` to use for logging messages with
-     a `severity` of `.Debug`.
+     a `severity` of `.debug`.
 
      - parameter verboseChannel: The `LogChannel` to use for logging messages
-     with a `severity` of `.Verbose`.
+     with a `severity` of `.verbose`.
      */
-    public static func enable(errorChannel errorChannel: LogChannel?, warningChannel: LogChannel?, infoChannel: LogChannel?, debugChannel: LogChannel?, verboseChannel: LogChannel?)
+    public static func enable(errorChannel: LogChannel?, warningChannel: LogChannel?, infoChannel: LogChannel?, debugChannel: LogChannel?, verboseChannel: LogChannel?)
     {
-        dispatch_once(&enableOnce) {
+        logLock.lock()
+        if !didEnable {
             self.error = errorChannel
             self.warning = warningChannel
             self.info = infoChannel
             self.debug = debugChannel
             self.verbose = verboseChannel
+            didEnable = true
         }
+        logLock.unlock()
     }
 
-    private static var enableOnce = dispatch_once_t()
+    private static let logLock = NSLock()
+    private static var didEnable = false
 
     /**
      Assuming CleanroomLogger has not yet been enabled, calling this function
      prevents any other caller from enabling CleanroomLogger for the remainder
      of the lifetime of the running executable.
-     
+
      The ability to prevent CleanroomLogger from being enabled may be useful
      in applications that link against libraries requiring CleanroomLogger.
      Application developers who did not choose to use CleanroomLogger can
      ensure that embedded third-party libraries don't use it, either.
-     
-     - important: If `Log.enable()` has already been called, calling 
+
+     - important: If `Log.enable()` has already been called, calling
      `Log.neverEnable()` will have no effect.
      */
     public static func neverEnable()
     {
-        dispatch_once(&enableOnce) {
-            self.error = nil
-            self.warning = nil
-            self.info = nil
-            self.debug = nil
-            self.verbose = nil
-        }
+        enable(errorChannel: nil, warningChannel: nil, infoChannel: nil, debugChannel: nil, verboseChannel: nil)
     }
 
     /**
@@ -273,15 +265,15 @@ public struct Log
      severity; will be `nil` if `Log` is not configured to perform logging at
      that severity.
      */
-    public static func channelForSeverity(severity: LogSeverity)
+    public static func channel(severity: LogSeverity)
         -> LogChannel?
     {
         switch severity {
-        case .Verbose:  return verbose
-        case .Debug:    return debug
-        case .Info:     return info
-        case .Warning:  return warning
-        case .Error:    return error
+        case .verbose:  return verbose
+        case .debug:    return debug
+        case .info:     return info
+        case .warning:  return warning
+        case .error:    return error
         }
     }
 
@@ -304,9 +296,9 @@ public struct Log
      captures the line number issuing the call to this function. You should
      not provide a value for this parameter.
      */
-    public static func trace(severity: LogSeverity, function: String = #function, filePath: String = #file, fileLine: Int = #line)
+    public static func trace(_ severity: LogSeverity, function: String = #function, filePath: String = #file, fileLine: Int = #line)
     {
-        channelForSeverity(severity)?.trace(function, filePath: filePath, fileLine: fileLine)
+        channel(severity: severity)?.trace(function, filePath: filePath, fileLine: fileLine)
     }
 
     /**
@@ -315,7 +307,7 @@ public struct Log
      - parameter severity: The `LogSeverity` for the log entry.
 
      - parameter msg: The message to log.
-     
+
      - parameter function: The default value provided for this parameter
      captures the signature of the calling function. You should not provide a
      value for this parameter.
@@ -327,10 +319,10 @@ public struct Log
      - parameter fileLine: The default value provided for this parameter
      captures the line number issuing the call to this function. You should
      not provide a value for this parameter.
-    */
-    public static func message(severity: LogSeverity, message: String, function: String = #function, filePath: String = #file, fileLine: Int = #line)
+     */
+    public static func message(_ severity: LogSeverity, message: String, function: String = #function, filePath: String = #file, fileLine: Int = #line)
     {
-        channelForSeverity(severity)?.message(message, function: function, filePath: filePath, fileLine: fileLine)
+        channel(severity: severity)?.message(message, function: function, filePath: filePath, fileLine: fileLine)
     }
 
     /**
@@ -354,19 +346,19 @@ public struct Log
      - parameter fileLine: The default value provided for this parameter
      captures the line number issuing the call to this function. You should
      not provide a value for this parameter.
-    */
-    public static func value(severity: LogSeverity, value: Any?, function: String = #function, filePath: String = #file, fileLine: Int = #line)
+     */
+    public static func value(_ severity: LogSeverity, value: Any?, function: String = #function, filePath: String = #file, fileLine: Int = #line)
     {
-        channelForSeverity(severity)?.value(value, function: function, filePath: filePath, fileLine: fileLine)
+        channel(severity: severity)?.value(value, function: function, filePath: filePath, fileLine: fileLine)
     }
 
-    private static func createLogChannelWithSeverity(severity: LogSeverity, forReceptacle receptacle: LogReceptacle)
+    private static func createLogChannel(severity: LogSeverity, receptacle: LogReceptacle)
         -> LogChannel?
     {
         guard severity >= receptacle.minimumSeverity else {
             return nil
         }
-
+        
         return LogChannel(severity: severity, receptacle: receptacle)
     }
 }

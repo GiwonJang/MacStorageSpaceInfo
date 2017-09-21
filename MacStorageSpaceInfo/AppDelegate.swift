@@ -17,39 +17,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	@IBOutlet weak var statusMenu: NSMenu!
 
-	let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(NSVariableStatusItemLength)
+    let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
-	var refreshTimer: NSTimer!
+	var refreshTimer: Timer!
 
-	func applicationDidFinishLaunching(aNotification: NSNotification) {
+	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		let launcherAppIdentifier = "io.handicraft.MacStorageSpaceInfoLauncher"
 
 		//you should move this next line to somewhere else this is for testing purposes only!!!
-		SMLoginItemSetEnabled(launcherAppIdentifier, true)
+		SMLoginItemSetEnabled(launcherAppIdentifier as CFString, true)
 
 		var startedAtLogin = false
-		for app in NSWorkspace.sharedWorkspace().runningApplications {
+		for app in NSWorkspace.shared.runningApplications {
 			if app.bundleIdentifier == launcherAppIdentifier {
 				startedAtLogin = true
 			}
 		}
 
 		if startedAtLogin {
-			NSDistributedNotificationCenter.defaultCenter().postNotificationName("killme", object: NSBundle.mainBundle().bundleIdentifier)
+            DistributedNotificationCenter.default.post(name: NSNotification.Name("killme"), object: Bundle.main.bundleIdentifier)
 		}
 
 
 		// Init CleanroomLogger
 		//Log.enable(configuration: XcodeLogConfiguration())
-		Log.enable(minimumSeverity: .Info,
-		           debugMode: true,
-		           verboseDebugMode: false,
-		           timestampStyle: .Default,
-		           severityStyle: .Xcode,
-		           showCallSite: true,
-		           showCallingThread: false,
-		           suppressColors: false,
-		           filters: [])
+        Log.enable(minimumSeverity: .info,
+                   debugMode: false,
+                   verboseDebugMode: false,
+                   stdStreamsMode: .useAsFallback,
+                   mimicOSLogOutput: true,
+                   showCallSite: true,
+                   filters: [])
 
 		//let icon = NSImage(named: "statusIcon")
 		//icon?.template = true
@@ -61,41 +59,41 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		startRefreshTimer()
 	}
 
-	func applicationWillTerminate(aNotification: NSNotification) {
+	func applicationWillTerminate(_ aNotification: Notification) {
 		refreshTimer.invalidate()
 		Log.debug?.message("Refresh Timer Stopped.")
 	}
 
-	@IBAction func menuClicked(sender: NSMenuItem) {
-		let task = NSTask()
+	@IBAction func menuClicked(_ sender: NSMenuItem) {
+		let task = Process()
 		task.launchPath = "/usr/bin/defaults"
 
-		if (sender.state == NSOnState) {
-			sender.state = NSOffState
+		if (sender.state == .on) {
+			sender.state = .off
 			task.arguments = ["write", "com.apple.finder", "AppleShowAllFiles", "NO"]
 		} else {
-			sender.state = NSOnState
+			sender.state = .on
 			task.arguments = ["write", "com.apple.finder", "AppleShowAllFiles", "YES"]
 		}
 
 		task.launch()
 		task.waitUntilExit()
 
-		let killtask = NSTask()
+		let killtask = Process()
 		killtask.launchPath = "/usr/bin/killall"
 		killtask.arguments = ["Finder"]
 		killtask.launch()
 	}
 
-	@IBAction func quitClicked(sender: NSMenuItem) {
-		NSApplication.sharedApplication().terminate(self)
+	@IBAction func quitClicked(_ sender: NSMenuItem) {
+		NSApplication.shared.terminate(self)
 	}
 
 	func deviceRemainingFreeSpaceInBytes() -> Double? {
-		let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
-		if let systemAttributes = try? NSFileManager.defaultManager().attributesOfFileSystemForPath(documentDirectoryPath.last!) {
-			if let freeSize = systemAttributes[NSFileSystemFreeSize] as? NSNumber {
-				let freeSizeInGB = Double(freeSize.longLongValue) / 1073741824.0
+		let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+		if let systemAttributes = try? FileManager.default.attributesOfFileSystem(forPath: documentDirectoryPath.last!) {
+			if let freeSize = systemAttributes[FileAttributeKey.systemFreeSize] as? NSNumber {
+				let freeSizeInGB = Double(freeSize.int64Value) / 1073741824.0
 				//NSLog("\(freeSizeInGB)")
 				return freeSizeInGB
 			}
@@ -105,12 +103,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	func startRefreshTimer() {
-		refreshTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: #selector(AppDelegate.update), userInfo: nil, repeats: true)
-		NSRunLoop.mainRunLoop().addTimer(refreshTimer, forMode: NSRunLoopCommonModes)
+		refreshTimer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(AppDelegate.update), userInfo: nil, repeats: true)
+		RunLoop.main.add(refreshTimer, forMode: RunLoopMode.commonModes)
 		Log.debug?.message("Refresh Timer Started.")
 	}
 
-	func update() {
+    @objc func update() {
 		let freeSizeInGB = deviceRemainingFreeSpaceInBytes()!
 		let numberOfPlaces = 2.0
 		let multiplier = pow(10.0, numberOfPlaces)

@@ -16,7 +16,7 @@
 public struct LiteralLogFormatter: LogFormatter
 {
     /** The literal string used as the return value of the receiver's 
-     `formatLogEntry()` function. */
+     `format(_:)` function. */
     public let literal: String
 
     /**
@@ -36,7 +36,7 @@ public struct LiteralLogFormatter: LogFormatter
 
      - returns: The value of the receiver's `literal` property; never `nil`.
      */
-    public func formatLogEntry(entry: LogEntry)
+    public func format(_ entry: LogEntry)
         -> String?
     {
         return literal

@@ -40,7 +40,7 @@ public final class LogReceptacle
     {
         let configs = configuration.flatMap{ $0.flatten() }
 
-        self.minimumSeverity = configs.map{ $0.minimumSeverity }.reduce(.Error, combine: { $0 < $1 ? $0 : $1 })
+        self.minimumSeverity = configs.map{ $0.minimumSeverity }.reduce(.error, { $0 < $1 ? $0 : $1 })
 
         self.configuration = configs
     }
@@ -51,7 +51,7 @@ public final class LogReceptacle
 
      - parameter entry: The `LogEntry` being logged.
      */
-    public func log(entry: LogEntry)
+    public func log(_ entry: LogEntry)
     {
         let matchingConfigs = configuration.filter{ entry.severity >= $0.minimumSeverity }
 
@@ -64,9 +64,9 @@ public final class LogReceptacle
         syncConfigs.forEach{ logEntry(entry, usingConfiguration: $0) }
     }
 
-    private lazy var acceptQueue: dispatch_queue_t = dispatch_queue_create("LogReceptacle.acceptQueue", DISPATCH_QUEUE_SERIAL)
+    private lazy var acceptQueue: DispatchQueue = DispatchQueue(label: "LogReceptacle.acceptQueue", attributes: [])
 
-    private func logEntry(entry: LogEntry, usingConfiguration config: LogConfiguration)
+    private func logEntry(_ entry: LogEntry, usingConfiguration config: LogConfiguration)
     {
         let synchronous = config.synchronousMode
         let acceptDispatcher = dispatcherForQueue(acceptQueue, synchronous: synchronous)
@@ -76,8 +76,14 @@ public final class LogReceptacle
                     let recordDispatcher = self.dispatcherForQueue(recorder.queue, synchronous: synchronous)
                     recordDispatcher {
                         for formatter in recorder.formatters {
-                            if let formatted = formatter.formatLogEntry(entry) {
-                                recorder.recordFormattedMessage(formatted, forLogEntry: entry, currentQueue: recorder.queue, synchronousMode: synchronous)
+                            var shouldBreak = false
+                            autoreleasepool {
+                                if let formatted = formatter.format(entry) {
+                                    recorder.record(message: formatted, for: entry, currentQueue: recorder.queue, synchronousMode: synchronous)
+                                    shouldBreak = true
+                                }
+                            }
+                            if shouldBreak {
                                 break
                             }
                         }
@@ -87,24 +93,25 @@ public final class LogReceptacle
         }
     }
 
-    private func doesLogEntry(entry: LogEntry, passFilters filters: [LogFilter])
+    private func doesLogEntry(_ entry: LogEntry, passFilters filters: [LogFilter])
         -> Bool
     {
         for filter in filters {
-            if !filter.shouldRecordLogEntry(entry) {
+            if !filter.shouldRecord(entry: entry) {
                 return false
             }
         }
         return true
     }
 
-    private func dispatcherForQueue(queue: dispatch_queue_t, synchronous: Bool) -> (dispatch_block_t) -> Void
+    private func dispatcherForQueue(_ queue: DispatchQueue, synchronous: Bool)
+        -> (@escaping () -> Void) -> Void
     {
-        let dispatcher: (dispatch_block_t) -> Void = { block in
+        let dispatcher: (@escaping () -> Void) -> Void = { block in
             if synchronous {
-                return dispatch_sync(queue, block)
+                return queue.sync(execute: block)
             } else {
-                return dispatch_async(queue, block)
+                return queue.async(execute: block)
             }
         }
         return dispatcher

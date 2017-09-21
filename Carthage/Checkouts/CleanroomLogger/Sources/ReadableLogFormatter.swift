@@ -11,15 +11,15 @@
 
  By default, this formatter:
 
- - Uses `.Default` as the default `TimestampStyle`
- - Uses `.Simple` as the default `SeverityStyle`
+ - Uses `.default` as the `TimestampStyle`
+ - Uses a custom `SeverityStyle` that pads the capitalized severity name
+ - Uses `.hex` as the `CallingThreadStyle`
  - Uses default field separator delimiters
- - Outputs the call site and calling thread
- - Does not perform text colorization
+ - Outputs the source code filename and line number of the call site
 
- These defaults can be overridden during instantiation.
+ Each of these settings can be overridden during instantiation.
  */
-public class ReadableLogFormatter: StandardLogFormatter
+open class ReadableLogFormatter: StandardLogFormatter
 {
     /**
      Initializes a new `ReadableLogFormatter` instance.
@@ -33,22 +33,15 @@ public class ReadableLogFormatter: StandardLogFormatter
      - parameter delimiterStyle: If provided, overrides the default field
      separator delimiters. Pass `nil` to use the default delimiters.
 
+     - parameter callingThreadStyle: If provided, specifies a
+     `CallingThreadStyle` to use for representing the calling thread. If `nil`,
+     the calling thread is not shown.
+
      - parameter showCallSite: If `true`, the source file and line indicating
      the call site of the log request will be added to formatted log messages.
-
-     - parameter showCallingThread: If `true`, a hexadecimal string containing
-     an opaque identifier for the calling thread will be added to formatted log
-     messages.
-
-     - parameter colorizer: The `TextColorizer` that will be used to colorize
-     the output of the receiver. If `nil`, no colorization will occur.
-
-     - parameter colorTable: If a `colorizer` is provided, an optional
-     `ColorTable` may also be provided to supply color information. If `nil`,
-     `DefaultColorTable` will be used for colorization.
      */
-    public override init(timestampStyle: TimestampStyle? = .Default, severityStyle: SeverityStyle? = .Simple, delimiterStyle: DelimiterStyle? = nil, showCallSite: Bool = true, showCallingThread: Bool = true, colorizer: TextColorizer? = nil, colorTable: ColorTable? = nil)
+    public override init(timestampStyle: TimestampStyle? = .default, severityStyle: SeverityStyle? = .custom(textRepresentation: .capitalized, truncateAtWidth: 7, padToWidth: 7, rightAlign: false), delimiterStyle: DelimiterStyle? = nil, callingThreadStyle: CallingThreadStyle? = .hex, showCallSite: Bool = true)
     {
-        super.init(timestampStyle: timestampStyle, severityStyle: severityStyle, delimiterStyle: delimiterStyle, showCallSite: showCallSite, showCallingThread: showCallingThread, colorizer: colorizer, colorTable: colorTable)
+        super.init(timestampStyle: timestampStyle, severityStyle: severityStyle, delimiterStyle: delimiterStyle, callingThreadStyle: callingThreadStyle, showCallSite: showCallSite)
     }
 }

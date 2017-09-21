@@ -9,18 +9,18 @@
 import Foundation
 
 /**
-`LogChannel` instances provide the high-level interface for accepting log
-messages.
-
-They are responsible for converting log requests into `LogEntry` instances
-that they then pass along to their associated `LogReceptacle`s to perform the
-actual logging.
-
-`LogChannel`s are provided as a convenience, exposed as static properties
-through `Log`. Use of `LogChannel`s and the `Log` is not required for logging;
-you can also perform logging by creating `LogEntry` instances manually and 
-passing them along to a `LogReceptacle`.
-*/
+ `LogChannel` instances provide the high-level interface for accepting log
+ messages.
+ 
+ They are responsible for converting log requests into `LogEntry` instances
+ that they then pass along to their associated `LogReceptacle`s to perform the
+ actual logging.
+ 
+ `LogChannel`s are provided as a convenience, exposed as static properties
+ through `Log`. Use of `LogChannel`s and the `Log` is not required for logging;
+ you can also perform logging by creating `LogEntry` instances manually and
+ passing them along to a `LogReceptacle`.
+ */
 public struct LogChannel
 {
     /** The `LogSeverity` of this `LogChannel`, which determines the severity
@@ -63,12 +63,12 @@ public struct LogChannel
      captures the line number issuing the call to this function. You should
      not provide a value for this parameter.
      */
-    public func trace(function: String = #function, filePath: String = #file, fileLine: Int = #line)
+    public func trace(_ function: String = #function, filePath: String = #file, fileLine: Int = #line)
     {
         var threadID: UInt64 = 0
         pthread_threadid_np(nil, &threadID)
 
-        let entry = LogEntry(payload: .Trace, severity: severity, callingFilePath: filePath, callingFileLine: fileLine, callingStackFrame: function, callingThreadID: threadID)
+        let entry = LogEntry(payload: .trace, severity: severity, callingFilePath: filePath, callingFileLine: fileLine, callingStackFrame: function, callingThreadID: threadID)
 
         receptacle.log(entry)
     }
@@ -90,12 +90,12 @@ public struct LogChannel
      captures the line number issuing the call to this function. You should
      not provide a value for this parameter.
     */
-    public func message(msg: String, function: String = #function, filePath: String = #file, fileLine: Int = #line)
+    public func message(_ msg: String, function: String = #function, filePath: String = #file, fileLine: Int = #line)
     {
         var threadID: UInt64 = 0
         pthread_threadid_np(nil, &threadID)
 
-        let entry = LogEntry(payload: .Message(msg), severity: severity, callingFilePath: filePath, callingFileLine: fileLine, callingStackFrame: function, callingThreadID: threadID)
+        let entry = LogEntry(payload: .message(msg), severity: severity, callingFilePath: filePath, callingFileLine: fileLine, callingStackFrame: function, callingThreadID: threadID)
 
         receptacle.log(entry)
     }
@@ -120,12 +120,12 @@ public struct LogChannel
      captures the line number issuing the call to this function. You should
      not provide a value for this parameter.
     */
-    public func value(value: Any?, function: String = #function, filePath: String = #file, fileLine: Int = #line)
+    public func value(_ value: Any?, function: String = #function, filePath: String = #file, fileLine: Int = #line)
     {
         var threadID: UInt64 = 0
         pthread_threadid_np(nil, &threadID)
 
-        let entry = LogEntry(payload: .Value(value), severity: severity, callingFilePath: filePath, callingFileLine: fileLine, callingStackFrame: function, callingThreadID: threadID)
+        let entry = LogEntry(payload: .value(value), severity: severity, callingFilePath: filePath, callingFileLine: fileLine, callingStackFrame: function, callingThreadID: threadID)
 
         receptacle.log(entry)
     }
