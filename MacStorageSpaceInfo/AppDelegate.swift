@@ -93,9 +93,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
 		if let systemAttributes = try? FileManager.default.attributesOfFileSystem(forPath: documentDirectoryPath.last!) {
 			if let freeSize = systemAttributes[FileAttributeKey.systemFreeSize] as? NSNumber {
-				let freeSizeInGB = Double(freeSize.int64Value) / 1073741824.0
-				//NSLog("\(freeSizeInGB)")
-				return freeSizeInGB
+				let freeSizeInGiB = Double(freeSize.int64Value) / 1073741824.0
+				//NSLog("\(freeSizeInGiB)")
+				return freeSizeInGiB
 			}
 		}
 
@@ -109,10 +109,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
     @objc func update() {
-		let freeSizeInGB = deviceRemainingFreeSpaceInBytes()!
+		let freeSizeInGiB = deviceRemainingFreeSpaceInBytes()!
 		let numberOfPlaces = 2.0
 		let multiplier = pow(10.0, numberOfPlaces)
-		let spaceString = "\(round(freeSizeInGB * multiplier) / multiplier)GB"
+		let spaceString = "\(round(freeSizeInGiB * multiplier) / multiplier)GiB"
 
 		statusItem.button!.title = spaceString
 		//statusItem.length = measureTextLength(spaceString).toIntMax()
